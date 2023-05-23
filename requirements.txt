@@ -1,0 +1,4 @@
+speechbrain~=0.5.14
+torch~=2.0.1
+torchaudio~=2.0.2
+transformers~=4.29.2
