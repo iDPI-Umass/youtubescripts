@@ -1,4 +1,5 @@
-data/*
+collections/*
 .idea/
 __pycache__/
 tmp
+.DS_Store

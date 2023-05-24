@@ -46,7 +46,7 @@ def classify_language_whisper(wav_filepath: str, model: str = DEFAULT_WHISPER_MO
     model = AutoModelForSpeechSeq2Seq.from_pretrained(model_name)
     tokenizer = WhisperTokenizer.from_pretrained(model_name)
 
-    waveform, sample_rate = torchaudio.load(os.path.join(ROOT_DIR, "data", wav_filepath))
+    waveform, sample_rate = torchaudio.load(os.path.join(ROOT_DIR, "collections", wav_filepath))
     input_features = processor(waveform.squeeze().numpy(), sampling_rate=sample_rate,
                                return_tensors="pt").input_features
     language = __detect_language(model, tokenizer, input_features)

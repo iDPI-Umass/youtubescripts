@@ -18,7 +18,7 @@ def identify_language(wav_filepath: str, model_selector: list = (0, DEFAULT_WHIS
     assert len(wav_filepath.split(os.sep)) == 3 and wav_filepath.split(os.sep)[1] == "wavs", \
         "filepath not in testvideoid_20230523_173130/wavs/testvideoid.wav format"
     assert wav_filepath.endswith(".wav"), "filename does not end in .wav"
-    assert os.path.isfile(os.path.join(ROOT_DIR, "data", wav_filepath)), "wav file does not exist"
+    assert os.path.isfile(os.path.join(ROOT_DIR, "collections", wav_filepath)), "wav file does not exist"
 
     language, probability = "", 0
 
