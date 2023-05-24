@@ -2,8 +2,8 @@ import os
 import torch
 import operator
 import torchaudio
-from config.definitions import ROOT_DIR
 from typing import Optional, Collection, List, Dict
+from config.definitions import ROOT_DIR, DEFAULT_WHISPER_MODEL
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, WhisperForConditionalGeneration, WhisperTokenizer
 
 
@@ -32,7 +32,13 @@ def __detect_language(model: WhisperForConditionalGeneration, tokenizer: Whisper
     ]
 
 
-def classify_language_whisper(wav_filepath: str, model: str = "small") -> tuple[str, float]:
+def classify_language_whisper(wav_filepath: str, model: str = DEFAULT_WHISPER_MODEL) -> tuple[str, float]:
+    """
+    classify language of wav file using a whisper model
+    :param wav_filepath: format testvideoid_20230523_173130/wavs/testvideoid.wav
+    :param model: whisper model name (tiny base small medium large-v2)
+    :return: language, probability
+    """
     assert model in ["tiny", "base", "small", "medium", "large-v2"], \
         "invalid model name (tiny base small medium large-v2)"
     model_name = f'openai/whisper-{model}'
