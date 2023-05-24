@@ -3,7 +3,10 @@
 spidering, language identification, transcription, random prefix sampling, random dialing sampling
 
 ## language identification
-* Whisper
+`from languageidentifier import identify_language`
+
+* [Whisper](youtubetools/languageidentifier/model_whisper.py)
+  * `identify_language("testvideoid_20230523_173130/wavs/AAKUqHBuzk4.wav", (0, "small"))`
   * uses OpenAI's [Whisper](https://huggingface.co/openai/whisper-large-v2), a pretrained automatic speech recognition and speech translation model
   * language identification implementation from [Joshua Tanner's thread in the Hugging Face Forums](https://discuss.huggingface.co/t/language-detection-with-whisper/26003)
   * choose from 5 different models: tiny base small medium large-v2
