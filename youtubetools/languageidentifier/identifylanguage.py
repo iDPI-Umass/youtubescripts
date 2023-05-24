@@ -1,7 +1,7 @@
 import os
 from config.definitions import ROOT_DIR
-from youtubetools.languageidentifier.whispermodel import classify_language_whisper
-from youtubetools.languageidentifier.voxlinguamodel import classify_language_voxlingua
+from youtubetools.languageidentifier.model_whisper import classify_language_whisper
+from youtubetools.languageidentifier.model_voxlingua import classify_language_voxlingua
 
 
 def identify_language(wav_filepath: str, model_selector: tuple[int, any] = (0, "small")) -> tuple[str, float]:
