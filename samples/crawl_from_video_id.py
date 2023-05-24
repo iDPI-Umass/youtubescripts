@@ -7,6 +7,5 @@
 # crawl, get tree
 # flatten tree -> queue/threaded
 #   download audio, metadata, transcripts
-#   youtubemusicsearch, insert into metadata file
 #   language_id, insert into metadata file
 # json to csv

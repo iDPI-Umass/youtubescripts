@@ -5,7 +5,7 @@ from config.definitions import ROOT_DIR
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 
-def download_metadata(collection, video_id):
+def download_metadata(collection, video_id, options = {}):
     assert os.path.exists(os.path.join(ROOT_DIR, "collections", collection, "metadata")), \
         f"metadata folder for {collection} collection does not exist"
 
