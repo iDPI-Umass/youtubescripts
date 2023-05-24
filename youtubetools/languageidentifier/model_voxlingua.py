@@ -4,7 +4,7 @@ from speechbrain.pretrained import EncoderClassifier
 
 model = EncoderClassifier.from_hparams(
     source="TalTechNLP/voxlingua107-epaca-tdnn",
-    savedir="tmp")
+    savedir="tmp")  # creates languageidentifier/tmp folder
 
 
 def __classify_language(wav_file: str, enclosing_folder: str, chunk_seconds: int) -> tuple[str, float]:
