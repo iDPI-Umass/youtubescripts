@@ -46,7 +46,9 @@ def __download_automatic_captions(collection, video_id, video_metadata: dict, ge
             ydl.download([video_id])
 
 
-def download_metadata_transcripts(collection, video_id, options: dict = {}):
+def download_metadata_transcripts(collection, video_id, options=None):
+    if options is None:
+        options = {}
     assert os.path.exists(os.path.join(ROOT_DIR, "collections", collection, "metadata")), \
         f"metadata folder for {collection} collection does not exist"
 
@@ -68,4 +70,3 @@ def download_metadata_transcripts(collection, video_id, options: dict = {}):
                     __download_automatic_captions(collection, video_id, video_metadata)
                 if "skip_metadata_save" in options.keys() and not options["skip_metadata_save"]:
                     json.dump(video_metadata, f)
-
