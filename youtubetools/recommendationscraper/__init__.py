@@ -1,1 +1,2 @@
-from spider import get_recommendation_tree
+from youtubetools.recommendationscraper.spider import get_recommendation_tree
+from youtubetools.recommendationscraper.treetools import flatten_dict

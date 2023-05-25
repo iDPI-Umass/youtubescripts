@@ -112,6 +112,8 @@ class RecommendationScraper:
 def get_recommendation_tree(video_id, layers=2):
     collection = f"recs_{video_id}_{layers}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
 
+    if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
+        os.makedirs(os.path.join(ROOT_DIR, "collections"))
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection))
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "logs"))
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
@@ -122,6 +124,8 @@ def get_recommendation_tree(video_id, layers=2):
     tree = scraper.bfs()
     with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:
         json.dump(tree, file, indent=4)
+
+    return collection
 
 
 # single threaded recursive implementation (slow!)

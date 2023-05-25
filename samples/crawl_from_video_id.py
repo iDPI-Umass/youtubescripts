@@ -1,11 +1,17 @@
-# from youtubetools.languageidentifier import identify_language
-#
-# print(identify_language("testvideoid_20230523_173130/wavs/AAKUqHBuzk4.wav", [1]))
-# print(classify_language_whisper("testvideoid_20230523_173130/wavs/AAKUqHBuzk4.wav"))
+import sys
+from youtubetools.datadownloader import download_data
+from youtubetools.languageidentifier import identify_language
+from youtubetools.recommendationscraper import get_recommendation_tree, flatten_dict
+
+collection = get_recommendation_tree(sys.argv[1])
+flattened = flatten_dict(collection)
+
+# queue flattened.keys()
 
 
 # crawl, get tree
 # flatten tree -> queue/threaded
 #   download audio, metadata, transcripts
 #   language_id, insert into metadata file
+#   delete audio file
 # json to csv
