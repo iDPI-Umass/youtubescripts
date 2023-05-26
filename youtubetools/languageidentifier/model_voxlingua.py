@@ -2,12 +2,11 @@ import os
 from config.definitions import ROOT_DIR
 from speechbrain.pretrained import EncoderClassifier
 
-model = EncoderClassifier.from_hparams(
-    source="TalTechNLP/voxlingua107-epaca-tdnn",
-    savedir=os.path.join(ROOT_DIR, "collections", "tmp"))  # creates collections/tmp folder
-
 
 def __classify_language(wav_file: str, collection: str, chunk_seconds: int) -> tuple[str, float]:
+    model = EncoderClassifier.from_hparams(
+        source="TalTechNLP/voxlingua107-epaca-tdnn",
+        savedir=os.path.join(ROOT_DIR, "collections", "tmp"))  # creates collections/tmp folder
     khz = 16000  # samples per second
     max_confidence_threshold = 0.97  # returns language prediction if confidence is greater than threshold
     save_dir = os.path.join(ROOT_DIR, "collections", collection, "wavs")
