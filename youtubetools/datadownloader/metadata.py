@@ -79,7 +79,8 @@ def json_to_csv(collection):
     simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
                          'like_count','average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
-                         'was_live', 'age_limit', '_has_drm', '_type', 'accessible_in_youtube_music']
+                         'was_live', 'age_limit', '_has_drm', '_type', 'accessible_in_youtube_music', 'whisper_lang',
+                         'whisper_probability']
     other_attributes = ['categories', 'tags', 'automatic_captions', 'subtitles', 'chapters']
 
     json_files = [json_file for json_file in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
