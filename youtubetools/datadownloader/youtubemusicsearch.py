@@ -5,8 +5,12 @@ def __ytm_search(video_id):
     ytm_client = innertube.InnerTube("WEB_REMIX")
     tries = 0
     while tries < 5:
+        query = f"inurl:{video_id}"
         try:
-            search_results = ytm_client.search(query=f"inurl:{video_id}")
+            search_results = ytm_client.search(query=query)
+            print(search_results)
+            if query in str(search_results):
+                return False
             if video_id in str(search_results):
                 return True
             else:
@@ -14,6 +18,7 @@ def __ytm_search(video_id):
         except Exception as e:
             print(f'ytm_search {video_id} {e}')
             tries += 1
+    return False
 
 
 def search_youtube_music(video_id):
