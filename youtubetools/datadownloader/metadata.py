@@ -1,6 +1,8 @@
 import os
 import json
 import yt_dlp
+import datetime
+import pandas as pd
 from config.definitions import ROOT_DIR
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
@@ -70,3 +72,38 @@ def download_metadata_transcripts(collection, video_id, options=None):
                     __download_automatic_captions(collection, video_id, video_metadata)
                 if "skip_metadata_save" in options.keys() and not options["skip_metadata_save"]:
                     json.dump(video_metadata, f)
+
+
+def json_to_csv(collection):
+    collection_metadata = []
+    simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
+                         'like_count','average_rating', 'comment_count', 'channel_id', 'channel',
+                         'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
+                         'was_live', 'age_limit', '_has_drm', '_type', 'accessible_in_youtube_music']
+    other_attributes = ['categories', 'tags', 'automatic_captions', 'subtitles', 'chapters']
+
+    json_files = [json_file for json_file in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
+                  if json_file.endswith(".json")]
+    for json_file in json_files:
+        video_metadata_dict = {}
+        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r") as metadata_file:
+            video_metadata = json.load(metadata_file)
+        for attribute in simple_attributes:
+            if attribute in video_metadata.keys():
+                video_metadata_dict[attribute] = video_metadata[attribute]
+            else:
+                video_metadata_dict[attribute] = "n/a"
+        video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
+                                                                        '%Y%m%d').strftime('%x')
+        for attribute in ['categories', 'tags', 'chapters']:
+            video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
+        video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
+                                                     video_metadata['automatic_captions'].keys()
+                                                     if auto_caption.endswith("-orig")])
+        video_metadata_dict["subtitles"] = json.dumps(list(video_metadata["subtitles"].keys()))
+        collection_metadata.append(video_metadata_dict)
+    df = pd.DataFrame.from_dict(collection_metadata)
+    df.to_csv(os.path.join(ROOT_DIR, "collections", collection, 'metadata.csv'), index=False, header=True)
+    print(collection_metadata)
+
+

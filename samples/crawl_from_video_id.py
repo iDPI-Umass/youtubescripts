@@ -1,25 +1,47 @@
+import os
 import sys
+import json
 from queue import Queue
+from threading import Thread
 from config.definitions import ROOT_DIR
-from youtubetools.datadownloader import download_data
+from youtubetools.logger import log_error
 from youtubetools.languageidentifier import identify_language
+from youtubetools.datadownloader import download_data, json_to_csv
 from youtubetools.recommendationscraper import get_recommendation_tree, flatten_dict
 
-collection = get_recommendation_tree(sys.argv[1])
+
+max_threads = 5
+root_node, depth = "8J-V3J3CBes", 2  # sys.argv[1], int(sys.argv[2])
+collection = get_recommendation_tree(root_node, depth)
 flattened = flatten_dict(collection)
+
+
+def worker(q):
+    while not q.empty():
+        video_id = q.get()
+        download_data(collection, video_id)
+
+        lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
+        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
+            metadata = json.load(md_file)
+        metadata["whisper_lang"] = lang_prediction[0]
+        metadata["whisper_probability"] = lang_prediction[1]
+        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
+            json.dump(metadata, md_file)
+
+        os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
+
+        q.task_done()
+
 
 q = Queue(maxsize=0)
 for video_id in flattened.keys():
     q.put(video_id)
 threads = []
+for i in range(max_threads):
+    work_thread = Thread(target=worker, args=(q,))
+    threads.append(work_thread)
+    work_thread.start()
+q.join()
 
-
-# queue flattened.keys()
-
-
-# crawl, get tree
-# flatten tree -> queue/threaded
-#   download audio, metadata, transcripts
-#   language_id, insert into metadata file
-#   delete audio file
-# json to csv
+json_to_csv(collection)
