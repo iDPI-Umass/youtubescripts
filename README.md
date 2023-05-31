@@ -13,6 +13,37 @@ change to youtubescripts/samples directory: `cd samples`
 
 run crawler script: `python3 crawl_from_video_id.py dQw4w9WgXcQ 2`
 
+### file structure
+```
+└── youtubescripts
+    └── collections (data goes here)
+        └── testvideoid_20230523_173130 (example collection)
+            └── logs (error logs)
+                └── 20230524_163654107588_audio_testvideoid.log
+            └── metadata
+                └── dQw4w9WgXcQ.json
+            └── transcripts
+                └── dQw4w9WgXcQ.en.vtt
+                └── dQw4w9WgXcQ.auto.en-orig.vtt
+            └── wavs
+                └── dQw4w9WgXcQ.wav
+            └── metadata.csv
+            └── tree.json
+        └── tmp (for storing voxlingua107 model)
+    └── samples (working scripts for common tasks)
+    └── config
+        └── definitions.py (package-wide settings)
+    └── youtubetools
+        └── datadownloader
+        └── languageidentifier
+        └── randomsampler
+        └── recommendationscraper
+    └── .gitignore
+    └── README.md
+    └── requirements.txt
+```
+
+
 ## features
 
 ### youtube data downloading
