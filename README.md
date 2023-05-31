@@ -1,10 +1,36 @@
 # youtubescripts
 
-spidering, language identification, transcription, random prefix sampling, random dialing sampling
+spidering, language identification, transcription, random prefix sampling, random dialing sampling, cosine similarity between collections
 
-## language identification
-`from youtubetools.languageidentifier import identify_language`
+## getting started
+clone repository: `git clone https://github.com/iDPI-Umass/youtubescripts.git`
 
+change to youtubescripts directory: `cd youtubescripts`
+
+install dependencies: `pip install -r requirements.txt`
+
+change to youtubescripts/samples directory: `cd samples`
+
+run crawler script: `python3 crawl_from_video_id.py dQw4w9WgXcQ 2`
+
+## features
+
+### youtube data downloading
+`from youtubetools import datadownloader`
+* `json_to_csv("testvideoid_20230523_173130")`
+  * makes csv of all metadata json files in a given collection
+* `download_data("testvideoid_20230523_173130", "dQw4w9WgXcQ")`
+  * downloads available metadata, audio file, uploaded captions, and original language auto transcripts
+
+### recommendation tree scraping
+`from youtubetools import recommendationscraper`
+* `get_recommendation_tree("dQw4w9WgXcQ", 3)`
+  * creates collection of recommendations, given a root video_id and depth (1≤depth≤6, default is 2)
+* `flatten_dict("testvideoid_20230523_173130")`
+  * creates dict of unique keys
+
+### language identification
+`from youtubetools import languageidentifier`
 * [Whisper](youtubetools/languageidentifier/model_whisper.py)
   * `identify_language("testvideoid_20230523_173130/wavs/AAKUqHBuzk4.wav")`
   * uses OpenAI's [Whisper](https://huggingface.co/openai/whisper-large-v2), a pretrained automatic speech recognition and speech translation model
@@ -17,4 +43,9 @@ spidering, language identification, transcription, random prefix sampling, rando
   * uses SpeechBrain's [VoxLingua107 ECAPA-TDNN model](https://huggingface.co/speechbrain/lang-id-voxlingua107-ecapa)
   * chunks audio into 30 seconds, returns language of chunk with highest probability or language of first chunk with >0.97 confidence 
 
-
+### local transcription
+tba
+### random sampling
+tba
+#### random prefix sampling
+#### random dialing sampling
