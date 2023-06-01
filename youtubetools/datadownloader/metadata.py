@@ -111,6 +111,6 @@ def json_to_csv(collection):
         collection_metadata.append(video_metadata_dict)
     df = pd.DataFrame.from_dict(collection_metadata)
     df.to_csv(os.path.join(ROOT_DIR, "collections", collection, 'metadata.csv'), index=False, header=True)
-    print(collection_metadata)
+    # print(collection_metadata)
 
 
