@@ -1,6 +1,6 @@
 import os
 from datetime import datetime
-from config.definitions import ROOT_DIR
+from youtubetools.config import ROOT_DIR
 
 
 def log_error(collection: str, video_id: str, package: str, message: any) -> None:

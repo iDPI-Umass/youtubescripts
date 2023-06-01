@@ -3,17 +3,17 @@ import sys
 import json
 from queue import Queue
 from threading import Thread
-from config.definitions import ROOT_DIR
-from youtubetools.logger import log_error
+from youtubetools.config import ROOT_DIR
 from youtubetools.languageidentifier import identify_language
 from youtubetools.datadownloader import download_data, json_to_csv
 from youtubetools.recommendationscraper import get_recommendation_tree, flatten_dict
 
 
-max_threads = 5
-root_node, depth = "8J-V3J3CBes", 2  # sys.argv[1], int(sys.argv[2])
+max_threads = 10
+root_node, depth = sys.argv[1], int(sys.argv[2])  # "8J-V3J3CBes", 2
 collection = get_recommendation_tree(root_node, depth)
 flattened = flatten_dict(collection)
+print(f"{len(list(flattened.keys()))} total videos collected")
 
 
 def worker(q):

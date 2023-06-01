@@ -1,7 +1,7 @@
 import os
 import time
 import subprocess
-from config.definitions import ROOT_DIR
+from youtubetools.config import ROOT_DIR
 from youtubetools.logger import log_error
 
 

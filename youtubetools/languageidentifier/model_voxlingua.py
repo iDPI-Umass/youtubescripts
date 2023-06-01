@@ -1,5 +1,5 @@
 import os
-from config.definitions import ROOT_DIR
+from youtubetools.config import ROOT_DIR
 from speechbrain.pretrained import EncoderClassifier
 
 

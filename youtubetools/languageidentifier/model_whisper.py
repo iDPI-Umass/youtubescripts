@@ -3,7 +3,7 @@ import torch
 import operator
 import torchaudio
 from typing import Optional, Collection, List, Dict
-from config.definitions import ROOT_DIR, DEFAULT_WHISPER_MODEL
+from youtubetools.config import ROOT_DIR, DEFAULT_WHISPER_MODEL
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, WhisperForConditionalGeneration, WhisperTokenizer
 
 

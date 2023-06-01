@@ -3,7 +3,7 @@ import json
 import yt_dlp
 import datetime
 import pandas as pd
-from config.definitions import ROOT_DIR
+from youtubetools.config import ROOT_DIR
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 

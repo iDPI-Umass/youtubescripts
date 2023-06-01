@@ -8,7 +8,7 @@ from functools import reduce
 from threading import Thread
 from datetime import datetime
 from youtubetools.logger import log_error
-from config.definitions import ROOT_DIR, MAX_SPIDERING_THREADS
+from youtubetools.config import ROOT_DIR, MAX_SPIDERING_THREADS
 
 
 class RecommendationScraper:

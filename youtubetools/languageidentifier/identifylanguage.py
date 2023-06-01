@@ -1,5 +1,5 @@
 import os
-from config.definitions import ROOT_DIR, DEFAULT_WHISPER_MODEL
+from youtubetools.config import ROOT_DIR, DEFAULT_WHISPER_MODEL
 
 
 def identify_language(wav_filepath: str, model_selector: list = (0, DEFAULT_WHISPER_MODEL)) -> tuple[str, float]:

@@ -1,6 +1,6 @@
 import os
 import json
-from config.definitions import ROOT_DIR
+from youtubetools.config import ROOT_DIR
 
 
 class TreeUniqueValues:
