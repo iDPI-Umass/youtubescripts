@@ -9,7 +9,7 @@ change to youtubescripts directory: `cd youtubescripts`
 
 install dependencies: `pip install -r requirements.txt`
 
-run crawler script: `python3 crawl_from_video_id.py dQw4w9WgXcQ 2`
+run crawler script: `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
 ### file structure
 ```
