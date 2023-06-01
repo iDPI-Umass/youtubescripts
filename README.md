@@ -30,10 +30,9 @@ run crawler script: `python3 crawl_from_video_id.py dQw4w9WgXcQ 2`
             └── metadata.csv
             └── tree.json
         └── tmp (for storing voxlingua107 model)
-    └── samples (working scripts for common tasks)
-    └── config
-        └── definitions.py (package-wide settings)
+    └── example_script.py
     └── youtubetools
+        └── config (package-wide settings)
         └── datadownloader
         └── languageidentifier
         └── randomsampler
