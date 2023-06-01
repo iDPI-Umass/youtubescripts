@@ -3,13 +3,11 @@
 spidering, language identification, transcription, random prefix sampling, random dialing sampling, cosine similarity between collections
 
 ## getting started
-clone repository: `git clone https://github.com/iDPI-Umass/youtubescripts.git`
+clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
 
 change to youtubescripts directory: `cd youtubescripts`
 
 install dependencies: `pip install -r requirements.txt`
-
-change to youtubescripts/samples directory: `cd samples`
 
 run crawler script: `python3 crawl_from_video_id.py dQw4w9WgXcQ 2`
 
