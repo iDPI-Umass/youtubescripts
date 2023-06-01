@@ -57,15 +57,21 @@ def download_metadata_transcripts(collection, video_id, options=None):
     if f"{video_id}.json" not in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata")):
         with open(f"{os.path.join(ROOT_DIR, 'collections', collection, 'metadata')}/{video_id}.json", "w") as f:
             video_metadata = __download_metadata(video_id)
-
+            metadata_keys = video_metadata.keys()
             if not bool(options):  # default behavior (search YouTube Music, fetch auto/uploaded transcripts)
-                video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
+                if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
+                    video_metadata["accessible_in_youtube_music"] = True
+                else:
+                    video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
                 __download_subtitles(collection, video_id, video_metadata)
                 __download_automatic_captions(collection, video_id, video_metadata)
                 json.dump(video_metadata, f)
             else:
                 if "skip_youtube_music_search" in options.keys() and not options["skip_youtube_music_search"]:
-                    video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
+                    if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
+                        video_metadata["accessible_in_youtube_music"] = True
+                    else:
+                        video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
                 if "skip_subtitles" in options.keys() and not options["skip_subtitles"]:
                     __download_subtitles(collection, video_id, video_metadata)
                 if "skip_automatic_captions" in options.keys() and not options["skip_automatic_captions"]:
@@ -79,8 +85,8 @@ def json_to_csv(collection):
     simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
                          'like_count','average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
-                         'was_live', 'age_limit', '_has_drm', '_type', 'accessible_in_youtube_music', 'whisper_lang',
-                         'whisper_probability']
+                         'was_live', 'age_limit', '_has_drm', '_type', 'whisper_lang', 'whisper_probability',
+                         'accessible_in_youtube_music', 'album', 'artist', 'track', 'release_date', 'release_year']
     other_attributes = ['categories', 'tags', 'automatic_captions', 'subtitles', 'chapters']
 
     json_files = [json_file for json_file in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
