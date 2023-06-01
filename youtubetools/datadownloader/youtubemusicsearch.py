@@ -8,7 +8,6 @@ def __ytm_search(video_id):
         query = f"inurl:{video_id}"
         try:
             search_results = ytm_client.search(query=query)
-            print(search_results)
             if query in str(search_results):
                 return False
             if video_id in str(search_results):
