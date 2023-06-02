@@ -4,7 +4,7 @@ spidering, language identification, transcription, random prefix sampling, rando
 
 ## getting started
 1. log into angwin and `ssh bradley`
-2. change to mounted storage space: `cd /srv/data/kyzheng`
+2. change to mounted storage space: `cd /srv/data/USERNAME`
 3. clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
 4. change to youtubescripts directory: `cd youtubescripts`
 5. install dependencies
