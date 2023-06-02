@@ -10,7 +10,7 @@ def __ytm_search(video_id):
             search_results = ytm_client.search(query=query)
             search_results_string = str(search_results).replace(query, "")
             if f'https://i.ytimg.com/vi/{video_id}' in search_results_string \
-                    or f'https://i.ytimg.com/vi_webp/{video_id}':
+                    or f'https://i.ytimg.com/vi_webp/{video_id}' in search_results_string:
                 return True
             # if "No results for " in search_results_string or "Try different keywords" in search_results_string:
             #     return False
