@@ -9,6 +9,7 @@ from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 def __download_metadata(video_id: str):
     ydl_opts = {
+        "skip_download": True,
         "quiet": True
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -98,28 +99,28 @@ def json_to_csv(collection):
         for attribute in simple_attributes:
             if attribute in video_metadata.keys():
                 video_metadata_dict[attribute] = video_metadata[attribute]
-            else:
-                video_metadata_dict[attribute] = "n/a"
+            # else:
+            #     video_metadata_dict[attribute] = "n/a"
         if 'upload_date' in video_metadata.keys():
             video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
                                                                             '%Y%m%d').strftime('%x')
-        else:
-            video_metadata_dict['upload_date'] = "n/a"
+        # else:
+        #     video_metadata_dict['upload_date'] = "n/a"
         for attribute in ['categories', 'tags', 'chapters']:
             if attribute in video_metadata.keys():
                 video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
-            else:
-                video_metadata_dict[attribute] = "n/a"
+            # else:
+            #     video_metadata_dict[attribute] = "n/a"
         if 'automatic_captions' in video_metadata.keys():
             video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
                                                         video_metadata['automatic_captions'].keys()
                                                         if auto_caption.endswith("-orig")])
-        else:
-            video_metadata_dict['automatic_captions'] = "n/a"
+        # else:
+        #     video_metadata_dict['automatic_captions'] = "n/a"
         if "subtitles" in video_metadata.keys():
             video_metadata_dict["subtitles"] = json.dumps(list(video_metadata["subtitles"].keys()))
-        else:
-            video_metadata_dict["subtitles"] = "n/a"
+        # else:
+        #     video_metadata_dict["subtitles"] = "n/a"
         collection_metadata.append(video_metadata_dict)
     df = pd.DataFrame.from_dict(collection_metadata)
     df.to_csv(os.path.join(ROOT_DIR, "collections", collection, 'metadata.csv'), index=False, header=True)
