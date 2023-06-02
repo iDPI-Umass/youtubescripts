@@ -7,7 +7,14 @@ clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtub
 
 change to youtubescripts directory: `cd youtubescripts`
 
-install dependencies: `pip install -r requirements.txt`
+install dependencies
+```
+pip install -r requirements.txt
+sudo add-apt-repository ppa:tomtomtom/yt-dlp    # Add ppa repo to apt
+sudo apt update                                 # Update package list
+sudo apt install yt-dlp                         # Install yt-dlp
+sudo apt install ffmpeg                         # Install ffmpeg and ffprobe
+```
 
 run crawler script: `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
