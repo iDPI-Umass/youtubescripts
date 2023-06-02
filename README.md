@@ -3,20 +3,22 @@
 spidering, language identification, transcription, random prefix sampling, random dialing sampling, cosine similarity between collections
 
 ## getting started
-clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
-
-change to youtubescripts directory: `cd youtubescripts`
-
-install dependencies
-```
-pip install -r requirements.txt
-sudo add-apt-repository ppa:tomtomtom/yt-dlp    # Add ppa repo to apt
-sudo apt update                                 # Update package list
-sudo apt install yt-dlp                         # Install yt-dlp
-sudo apt install ffmpeg                         # Install ffmpeg and ffprobe
-```
-
-run crawler script: `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
+1. log into angwin and `ssh bradley`
+2. change to mounted storage space: `cd /srv/data/kyzheng`
+3. clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
+4. change to youtubescripts directory: `cd youtubescripts`
+5. install dependencies
+   ```
+   pip install -r requirements.txt
+   ```
+   if yt-dlp or ffmpeg aren't installed already (skip if on bradley): 
+   ```
+   sudo add-apt-repository ppa:tomtomtom/yt-dlp    # Add ppa repo to apt
+   sudo apt update                                 # Update package list
+   sudo apt install yt-dlp                         # Install yt-dlp
+   sudo apt install ffmpeg                         # Install ffmpeg and ffprobe
+   ```
+6. run crawler script: `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
 ### file structure
 ```
