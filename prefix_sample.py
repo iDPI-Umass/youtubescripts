@@ -6,17 +6,15 @@ from queue import Queue
 from threading import Thread
 from youtubetools.config import ROOT_DIR
 from youtubetools.languageidentifier import identify_language
+from youtubetools.randomsampler import get_random_prefix_sample
 from youtubetools.datadownloader import download_data, json_to_csv
-from youtubetools.recommendationscraper import get_recommendation_tree, flatten_dict
-
 
 max_threads = 10
-root_node, depth = sys.argv[1], int(sys.argv[2])  # "8J-V3J3CBes", 2
-collection = get_recommendation_tree(root_node, depth)
-flattened = flatten_dict(collection)
-total_videos = len(list(flattened.keys()))
+sample_size = int(sys.argv[1])
+collection = get_random_prefix_sample(sample_size)
+with open(os.path.join(ROOT_DIR, "collections", collection, "randomids.txt"), "r") as f:
+    ids = [random_id[0:11] for random_id in f.readlines()]
 pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
-
 
 def worker(q):
     while not q.empty():
@@ -32,12 +30,12 @@ def worker(q):
             json.dump(metadata, md_file)
 
         os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
-        pbar.update((total_videos-q.qsize())/total_videos*100)
+        pbar.update((len(ids) - q.qsize()) / len(ids) * 100)
         q.task_done()
 
 
 q = Queue(maxsize=0)
-for video_id in flattened.keys():
+for video_id in ids:
     q.put(video_id)
 threads = []
 for i in range(max_threads):
