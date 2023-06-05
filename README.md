@@ -5,13 +5,14 @@ spidering, language identification, transcription, random prefix sampling, rando
 ## getting started
 1. log into angwin and `ssh bradley`
 2. change to mounted storage space: `cd /srv/data/USERNAME`
-3. clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
-4. change to youtubescripts directory: `cd youtubescripts`
-5. install dependencies
+   a. ensure that you have read, write, and execution permissions in this folder (admin has to set this up)
+4. clone repository: `git init` and `git clone https://github.com/iDPI-Umass/youtubescripts.git`
+5. change to youtubescripts directory: `cd youtubescripts`
+6. install dependencies
    ```
    pip install -r requirements.txt
    ```
-   if yt-dlp or ffmpeg aren't installed already (skip if on bradley): 
+   (skip if on bradley): if yt-dlp or ffmpeg aren't installed already: 
    ```
    sudo add-apt-repository ppa:tomtomtom/yt-dlp    # Add ppa repo to apt
    sudo apt update                                 # Update package list
