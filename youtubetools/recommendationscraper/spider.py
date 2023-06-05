@@ -8,7 +8,7 @@ from functools import reduce
 from threading import Thread
 from datetime import datetime
 from youtubetools.logger import log_error
-from youtubetools.config import ROOT_DIR, MAX_SPIDERING_THREADS
+from youtubetools.config import ROOT_DIR, MAX_SPIDERING_THREADS, collection_init
 
 
 class RecommendationScraper:
@@ -112,15 +112,8 @@ class RecommendationScraper:
 
 def get_recommendation_tree(video_id, layers=2):
     collection = f"recs_{video_id}_{layers}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
-
-    if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
-        os.makedirs(os.path.join(ROOT_DIR, "collections"))
-    os.makedirs(os.path.join(ROOT_DIR, "collections", collection))
-    os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "logs"))
-    os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
-    os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "transcripts"))
-    os.makedirs(os.path.join(ROOT_DIR, "collections", collection, "wavs"))
-
+    collection_init(collection)
+    
     scraper = RecommendationScraper(collection, video_id, layers)
     tree = scraper.bfs()
     with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:
