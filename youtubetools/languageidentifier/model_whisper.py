@@ -2,6 +2,7 @@ import os
 import torch
 import operator
 import torchaudio
+from youtubetools.logger import log_error
 from typing import Optional, Collection, List, Dict
 from youtubetools.config import ROOT_DIR, DEFAULT_WHISPER_MODEL
 from transformers import AutoProcessor, AutoModelForSpeechSeq2Seq, WhisperForConditionalGeneration, WhisperTokenizer
@@ -42,13 +43,17 @@ def classify_language_whisper(wav_filepath: str, model: str = DEFAULT_WHISPER_MO
     assert model in ["tiny", "base", "small", "medium", "large-v2"], \
         "invalid model name (tiny base small medium large-v2)"
     model_name = f'openai/whisper-{model}'
-    processor = AutoProcessor.from_pretrained(model_name)
-    model = AutoModelForSpeechSeq2Seq.from_pretrained(model_name)
-    tokenizer = WhisperTokenizer.from_pretrained(model_name)
+    try:
+        processor = AutoProcessor.from_pretrained(model_name)
+        model = AutoModelForSpeechSeq2Seq.from_pretrained(model_name)
+        tokenizer = WhisperTokenizer.from_pretrained(model_name)
 
-    waveform, sample_rate = torchaudio.load(os.path.join(ROOT_DIR, "collections", wav_filepath))
-    input_features = processor(waveform.squeeze().numpy(), sampling_rate=sample_rate,
-                               return_tensors="pt").input_features
-    language = __detect_language(model, tokenizer, input_features)
-    lang_token, probability = sorted(language[0].items(), key=operator.itemgetter(1), reverse=True)[0]
-    return lang_token[2:4], round(probability, 4)
+        waveform, sample_rate = torchaudio.load(os.path.join(ROOT_DIR, "collections", wav_filepath))
+        input_features = processor(waveform.squeeze().numpy(), sampling_rate=sample_rate,
+                                   return_tensors="pt").input_features
+        language = __detect_language(model, tokenizer, input_features)
+        lang_token, probability = sorted(language[0].items(), key=operator.itemgetter(1), reverse=True)[0]
+        return lang_token[2:4], round(probability, 4)
+    except Exception as e:
+        log_error(wav_filepath.split("/")[0], wav_filepath.split("/")[2].split(".")[0],
+                  "languageidentifier_model_whisper", e)

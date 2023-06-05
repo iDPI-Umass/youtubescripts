@@ -37,7 +37,7 @@ class RecommendationScraper:
                        "compactVideoRenderer" in rec.keys() and "videoId" in rec["compactVideoRenderer"].keys()]
                 return ids[0:min(max_recs, len(ids))]
             except Exception as e:
-                log_error(self.collection, self.video_id, "recommendationscraper", e)
+                log_error(self.collection, self.video_id, "recommendationscraper_spider", e)
                 tries += 1
                 time.sleep(5)
         return []
@@ -104,7 +104,8 @@ class RecommendationScraper:
                                                     if self.layers > 6:
                                                         for key_6 in self.__get_by_path(self.rec_dict, path_5).keys():
                                                             path_6 = path_5 + [key_6]
-                                                            keys_6 = list(self.__get_by_path(self.rec_dict, path_6).keys())
+                                                            keys_6 = list(
+                                                                self.__get_by_path(self.rec_dict, path_6).keys())
                                                             self.__worker_staging(path_6, keys_6)
         return self.rec_dict
 

@@ -1,6 +1,7 @@
 import os
 import json
 from youtubetools.config import ROOT_DIR
+from youtubetools.logger import log_error
 
 
 class TreeUniqueValues:
@@ -24,6 +25,8 @@ class TreeUniqueValues:
         return self.flattened_dict
 
 
-def flatten_dict(collection):
+def flatten_dict(collection: str) -> dict:
     flat_dict = TreeUniqueValues(collection)
-    return flat_dict.flat_dict()
+    flattened_dict = flat_dict.flat_dict()
+    log_error(collection, collection[5:5+11], "recommendationscraper_treetools", json.dumps(flattened_dict))
+    return flattened_dict

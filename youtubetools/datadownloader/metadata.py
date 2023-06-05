@@ -4,6 +4,7 @@ import yt_dlp
 import datetime
 import pandas as pd
 from youtubetools.config import ROOT_DIR
+from youtubetools.logger import log_error
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 
@@ -57,22 +58,30 @@ def download_metadata_transcripts(collection, video_id, options=None):
 
     if f"{video_id}.json" not in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata")):
         with open(f"{os.path.join(ROOT_DIR, 'collections', collection, 'metadata')}/{video_id}.json", "w") as f:
-            video_metadata = __download_metadata(video_id)
+            try:
+                video_metadata = __download_metadata(video_id)
+            except Exception as e:
+                video_metadata = {}
+                log_error(collection, video_id, "datadownloader_metadata_metadata", e)
             metadata_keys = video_metadata.keys()
             if not bool(options):  # default behavior (search YouTube Music, fetch auto/uploaded transcripts)
                 if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
                     video_metadata["accessible_in_youtube_music"] = True
                 else:
-                    video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
-                __download_subtitles(collection, video_id, video_metadata)
-                __download_automatic_captions(collection, video_id, video_metadata)
+                    video_metadata["accessible_in_youtube_music"] = search_youtube_music(collection, video_id)
+                try:
+                    __download_subtitles(collection, video_id, video_metadata)
+                    __download_automatic_captions(collection, video_id, video_metadata)
+                except Exception as e:
+                    log_error(collection, video_id, "datadownloader_metadata_subtitles", e)
+
                 json.dump(video_metadata, f)
             else:
                 if "skip_youtube_music_search" in options.keys() and not options["skip_youtube_music_search"]:
                     if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
                         video_metadata["accessible_in_youtube_music"] = True
                     else:
-                        video_metadata["accessible_in_youtube_music"] = search_youtube_music(video_id)
+                        video_metadata["accessible_in_youtube_music"] = search_youtube_music(collection, video_id)
                 if "skip_subtitles" in options.keys() and not options["skip_subtitles"]:
                     __download_subtitles(collection, video_id, video_metadata)
                 if "skip_automatic_captions" in options.keys() and not options["skip_automatic_captions"]:
@@ -84,7 +93,7 @@ def download_metadata_transcripts(collection, video_id, options=None):
 def json_to_csv(collection):
     collection_metadata = []
     simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
-                         'like_count','average_rating', 'comment_count', 'channel_id', 'channel',
+                         'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
                          'was_live', 'age_limit', '_has_drm', '_type', 'whisper_lang', 'whisper_probability',
                          'accessible_in_youtube_music', 'album', 'artist', 'track', 'release_date', 'release_year']
@@ -102,28 +111,18 @@ def json_to_csv(collection):
             for attribute in simple_attributes:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = video_metadata[attribute]
-                # else:
-                #     video_metadata_dict[attribute] = "n/a"
             if 'upload_date' in video_metadata.keys():
                 video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
                                                                                 '%Y%m%d').strftime('%x')
-            # else:
-            #     video_metadata_dict['upload_date'] = "n/a"
             for attribute in ['categories', 'tags', 'chapters']:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
-                # else:
-                #     video_metadata_dict[attribute] = "n/a"
             if 'automatic_captions' in video_metadata.keys():
                 video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
-                                                            video_metadata['automatic_captions'].keys()
-                                                            if auto_caption.endswith("-orig")])
-            # else:
-            #     video_metadata_dict['automatic_captions'] = "n/a"
+                                                                        video_metadata['automatic_captions'].keys()
+                                                                        if auto_caption.endswith("-orig")])
             if "subtitles" in video_metadata.keys():
                 video_metadata_dict["subtitles"] = json.dumps(list(video_metadata["subtitles"].keys()))
-            # else:
-            #     video_metadata_dict["subtitles"] = "n/a"
         collection_metadata.append(video_metadata_dict)
     df = pd.DataFrame.from_dict(collection_metadata)
     df.to_csv(os.path.join(ROOT_DIR, "collections", collection, 'metadata.csv'), index=False, header=True)
