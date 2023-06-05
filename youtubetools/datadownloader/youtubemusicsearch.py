@@ -1,7 +1,8 @@
 import innertube
+from youtubetools.logger import log_error
 
 
-def __ytm_search(video_id):
+def __ytm_search(collection, video_id):
     ytm_client = innertube.InnerTube("WEB_REMIX")
     tries = 0
     while tries < 5:
@@ -17,11 +18,11 @@ def __ytm_search(video_id):
             else:
                 return False
         except Exception as e:
-            print(f'ytm_search {video_id} {e}')
+            log_error(collection, video_id, "datadownloader_youtubemusicsearch", e)
             tries += 1
     return False
 
 
-def search_youtube_music(video_id):
-    # assert len(video_id) == 11, "video_id must be 11 characters long"
-    return __ytm_search(video_id)
+def search_youtube_music(collection, video_id):
+    assert len(video_id) == 11, "video_id must be 11 characters long"
+    return __ytm_search(collection, video_id)
