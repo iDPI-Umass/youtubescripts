@@ -38,6 +38,7 @@ def calculate_vectors(metadata, attribute: str) -> dict:
 
 def import_collection_metadata(collection):
     df = pd.read_csv(os.path.join(ROOT_DIR, "collections", collection, "metadata.csv"))
+    df = df.drop(df[df['upload_date'] != df['upload_date']].index)
     df['upload_year'] = df['upload_date'].apply(lambda x: int("20"+x[-2:]))
     df.loc[df['whisper_probability'] < PROBABILITY_THRESHOLD, 'whisper_lang'] = 'xx'
     return df
