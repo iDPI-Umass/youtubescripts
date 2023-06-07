@@ -5,6 +5,7 @@ import progressbar
 from queue import Queue
 from threading import Thread
 from youtubetools.config import ROOT_DIR
+from youtubetools.logger import log_error
 from youtubetools.languageidentifier import identify_language
 from youtubetools.randomsampler import get_random_prefix_sample
 from youtubetools.datadownloader import download_data, json_to_csv
@@ -20,16 +21,18 @@ def worker(q):
     while not q.empty():
         video_id = q.get()
         download_data(collection, video_id)
+        if os.path.isfile(os.path.join(collection, "wavs", f"{video_id}.wav")) and os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json")):
+            lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
+            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
+                metadata = json.load(md_file)
+            metadata["whisper_lang"] = lang_prediction[0]
+            metadata["whisper_probability"] = lang_prediction[1]
+            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
+                json.dump(metadata, md_file)
 
-        lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
-        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
-            metadata = json.load(md_file)
-        metadata["whisper_lang"] = lang_prediction[0]
-        metadata["whisper_probability"] = lang_prediction[1]
-        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
-            json.dump(metadata, md_file)
-
-        os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
+            os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
+        else:
+            log_error(collection, video_id, "prefix_sample", f"audio and/or metadata for {video_id} not downloaded")
         pbar.update((len(ids) - q.qsize()) / len(ids) * 100)
         q.task_done()
 

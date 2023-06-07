@@ -113,7 +113,7 @@ class RecommendationScraper:
 def get_recommendation_tree(video_id, layers=2):
     collection = f"recs_{video_id}_{layers}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
     collection_init(collection)
-    
+
     scraper = RecommendationScraper(collection, video_id, layers)
     tree = scraper.bfs()
     with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:

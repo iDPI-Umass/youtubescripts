@@ -96,7 +96,8 @@ def json_to_csv(collection):
                          'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
                          'was_live', 'age_limit', '_has_drm', '_type', 'whisper_lang', 'whisper_probability',
-                         'accessible_in_youtube_music', 'album', 'artist', 'track', 'release_date', 'release_year']
+                         'accessible_in_youtube_music']
+    ytmusic_attributes = ['album', 'artist', 'track', 'release_date', 'release_year']
     other_attributes = ['categories', 'tags', 'automatic_captions', 'subtitles', 'chapters']
 
     json_files = [json_file for json_file in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata"))
@@ -111,10 +112,18 @@ def json_to_csv(collection):
             for attribute in simple_attributes:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = video_metadata[attribute]
+                else:
+                    video_metadata_dict[attribute] = 0
+            for attribute in ytmusic_attributes:
+                if attribute in video_metadata.keys():
+                    video_metadata_dict[attribute] = video_metadata[attribute]
+
             if 'upload_date' in video_metadata.keys():
                 video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
                                                                                 '%Y%m%d').strftime('%x')
-            for attribute in ['categories', 'tags', 'chapters']:
+            if 'categories' in video_metadata.keys():
+                video_metadata_dict[attribute] = video_metadata[attribute][0]
+            for attribute in ['tags', 'chapters']:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
             if 'automatic_captions' in video_metadata.keys():
