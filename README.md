@@ -91,6 +91,7 @@ example: compare a random prefix-sampled collection with a 2-depth recommended f
   * makes csv of all metadata json files in a given collection
 * `download_data("testvideoid_20230523_173130", "dQw4w9WgXcQ")`
   * downloads available metadata, audio file, uploaded captions, and original language auto transcripts
+  * searches YouTube Music, adds result to metadata file
 
 ### recommendation tree scraping
 `from youtubetools import recommendationscraper`
@@ -113,9 +114,18 @@ example: compare a random prefix-sampled collection with a 2-depth recommended f
   * uses SpeechBrain's [VoxLingua107 ECAPA-TDNN model](https://huggingface.co/speechbrain/lang-id-voxlingua107-ecapa)
   * chunks audio into 30 seconds, returns language of chunk with highest probability or language of first chunk with >0.97 confidence 
 
+### random sampling
+`from youtubetools import randomsampler`
+* random prefix sampling
+  * `get_random_prefix_sample(100)`
+  * creates collection of random prefix-sampled videos
+* random dialing sampling
+  * TBA
+
 ### local transcription
 tba
-### random sampling
-tba
-#### random prefix sampling
-#### random dialing sampling
+
+### metadata analysis
+`from youtubetools import analysis`
+* cosine similarity
+  * `collection_comparison(collection1, collection2)`
