@@ -21,7 +21,39 @@ spidering, language identification, transcription, random prefix sampling, rando
       ```
 6. run crawler script: `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
-### file structure
+## sample scripts
+
+### crawl_from_video_id.py
+* creates a collection of recommended videos from a given video ID
+* detects language of audio with Whisper, searches for video in YouTube Music
+* output: metadata.csv, recommendation tree, any available transcripts, metadata JSON files
+* requires 2 command line arguments: video ID, tree depth
+
+example: create a collection of recommendations from dQw4w9WgXcQ, and recommendations from those recommendations: 
+
+`python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
+
+### prefix_sample.py
+* creates a collection of random, prefix-sampled videos
+* detects language of audio with Whisper, searches for video in YouTube Music
+* output: metadata.csv, list of random IDs, any available transcripts, metadata JSON files
+* requires 1 command line argument: minimum random sample size
+
+example: create a collection of 1000 random prefix-sampled YouTube videos
+
+`python3 prefix_sample.py 1000`
+
+
+### collection_similarity.py
+* compares two collections of YouTube videos and returns a cosine similarity value for the calculated vectors
+* output: cosine similarity value
+* requires 2 command line arguments: name of collection 1, name of collection2
+
+example: compare a random prefix-sampled collection with a 2-depth recommended from "dQw4w9WgXcQ" collection:
+
+`python3 collection_similarity.py "random_prefix_200_20230601_210754_084511" "recs_dQw4w9WgXcQ_2_20230602_100908_183277"`
+
+## file structure
 ```
 └── youtubescripts
     └── collections (data goes here)
