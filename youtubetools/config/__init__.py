@@ -1,4 +1,5 @@
 import os
+import stat
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
 DEFAULT_WHISPER_MODEL = "small"
 MAX_SPIDERING_THREADS = 10
@@ -126,19 +127,24 @@ TO_LANGUAGE_CODE = {
 def collection_init(collection_name):
     if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
-        os.chmod(os.path.join(ROOT_DIR, "collections"), 0x777)
+        try:
+            os.chmod(os.path.join(ROOT_DIR, "collections"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+        except:
+            pass
+
+
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), 0o777)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "logs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), 0o777)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), 0o777)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), 0o777)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), 0o777)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
