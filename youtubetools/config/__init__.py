@@ -126,8 +126,19 @@ TO_LANGUAGE_CODE = {
 def collection_init(collection_name):
     if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
+        os.chmod(os.path.join(ROOT_DIR, "collections"), 0x777)
+
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), 0o777)
+
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "logs"))
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), 0o777)
+
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"))
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), 0o777)
+
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"))
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), 0o777)
+
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"))
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), 0o777)
