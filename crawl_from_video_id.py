@@ -22,7 +22,7 @@ def worker(q):
     while not q.empty():
         video_id = q.get()
         download_data(collection, video_id)
-        if os.path.isfile(os.path.join(collection, "wavs", f"{video_id}.wav")):
+        if os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav")):
             lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
             with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
                 metadata = json.load(md_file)
