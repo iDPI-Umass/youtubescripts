@@ -8,7 +8,7 @@ from youtubetools.logger import log_error
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 
-def __download_metadata(video_id: str):
+def download_metadata(video_id: str):
     ydl_opts = {
         "skip_download": True,
         "quiet": True
@@ -59,7 +59,7 @@ def download_metadata_transcripts(collection, video_id, options=None):
     if f"{video_id}.json" not in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata")):
         with open(f"{os.path.join(ROOT_DIR, 'collections', collection, 'metadata')}/{video_id}.json", "w") as f:
             try:
-                video_metadata = __download_metadata(video_id)
+                video_metadata = download_metadata(video_id)
             except Exception as e:
                 video_metadata = {}
                 log_error(collection, video_id, "datadownloader_metadata_metadata", e)

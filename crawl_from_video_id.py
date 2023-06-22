@@ -22,16 +22,15 @@ def worker(q):
     while not q.empty():
         video_id = q.get()
         download_data(collection, video_id)
-
-        lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
-        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
-            metadata = json.load(md_file)
-        metadata["whisper_lang"] = lang_prediction[0]
-        metadata["whisper_probability"] = lang_prediction[1]
-        with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
-            json.dump(metadata, md_file)
-
-        os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
+        if os.path.isfile(os.path.join(collection, "wavs", f"{video_id}.wav")):
+            lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
+            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
+                metadata = json.load(md_file)
+            metadata["whisper_lang"] = lang_prediction[0]
+            metadata["whisper_probability"] = lang_prediction[1]
+            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
+                json.dump(metadata, md_file)
+            os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
         pbar.update((total_videos-q.qsize())/total_videos*100)
         q.task_done()
 
