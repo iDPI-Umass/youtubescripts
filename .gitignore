@@ -3,3 +3,6 @@ collections/*
 __pycache__/
 tmp
 .DS_Store
+temp
+*.mht
+*.html
