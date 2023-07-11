@@ -33,6 +33,13 @@ example: create a collection of recommendations from dQw4w9WgXcQ, and recommenda
 
 `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
+
+### personalized_recs.py
+* creates recommendation tree from downloaded YouTube html files
+* `folder_containing_html_files` should be under the `temp` folder
+
+`python3 personalized_recs.py "dQw4w9WgXcQ" "folder_containing_html_files"`
+
 ### prefix_sample.py
 * creates a collection of random, prefix-sampled videos
 * detects language of audio with Whisper, searches for video in YouTube Music
@@ -70,6 +77,11 @@ example: compare a random prefix-sampled collection with a 2-depth recommended f
             └── metadata.csv
             └── tree.json
         └── tmp (for storing voxlingua107 model)
+    └── temp (put HTML files in a folder here)
+        └── folder_containing_html_files
+            └── youtube1.html
+            └── youtube2.html
+            └── youtube3.html
     └── example_script.py
     └── youtubetools
         └── config (package-wide settings)
