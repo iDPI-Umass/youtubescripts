@@ -33,6 +33,22 @@ example: create a collection of recommendations from dQw4w9WgXcQ, and recommenda
 
 `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
+
+### personalized_recs.py
+* creates recommendation tree from downloaded YouTube html files
+* `folder_containing_html_files` should be in a folder in your home folder on angwin
+
+creating a personalized recommended collection:
+1. open Chrome and pick an initial YouTube video to start from
+2. hold down cmd (Mac) or ctrl (Windows) and click on each recommended video to open in a new background tab
+3. starting from the initial video and repeating for each recommendation
+   * cmd/ctrl-s to save the page
+   * navigate to an appropriate folder on your local machine in the file selector popup
+   * select Format: Webpage, Complete
+4. after downloading all the webpages, make a folder in your home folder on angwin, move only HTML files over to the new folder
+
+`python3 personalized_recs.py "dQw4w9WgXcQ" "folder_on_angwin_containing_html_files"`
+
 ### prefix_sample.py
 * creates a collection of random, prefix-sampled videos
 * detects language of audio with Whisper, searches for video in YouTube Music
