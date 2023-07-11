@@ -43,7 +43,7 @@ creating a personalized recommended collection:
 2. hold down cmd (Mac) or ctrl (Windows) and click on each recommended video to open in a new background tab
 3. starting from the initial video and repeating for each recommendation
    * cmd/ctrl-s to save the page
-   * navigate to an appropriate folder in the file selector popup
+   * navigate to an appropriate folder on your local machine in the file selector popup
    * select Format: Webpage, Complete
 4. after downloading all the webpages, make a folder in your home folder on angwin, move only HTML files over to the new folder
 
