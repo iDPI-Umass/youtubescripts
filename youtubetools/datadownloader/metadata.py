@@ -69,11 +69,14 @@ def download_metadata_transcripts(collection, video_id, options=None):
                     video_metadata["accessible_in_youtube_music"] = True
                 else:
                     video_metadata["accessible_in_youtube_music"] = search_youtube_music(collection, video_id)
-                try:
-                    __download_subtitles(collection, video_id, video_metadata)
-                    __download_automatic_captions(collection, video_id, video_metadata)
-                except Exception as e:
-                    log_error(collection, video_id, "datadownloader_metadata_subtitles", e)
+                if "is_live" in video_metadata.keys() and video_metadata["is_live"]:
+                    pass
+                else:
+                    try:
+                        __download_subtitles(collection, video_id, video_metadata)
+                        __download_automatic_captions(collection, video_id, video_metadata)
+                    except Exception as e:
+                        log_error(collection, video_id, "datadownloader_metadata_subtitles", e)
 
                 json.dump(video_metadata, f)
             else:
