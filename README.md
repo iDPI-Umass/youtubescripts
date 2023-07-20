@@ -33,6 +33,23 @@ example: create a collection of recommendations from dQw4w9WgXcQ, and recommenda
 
 `python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2`
 
+example: same as above, but skip classifying language and downloading audio (the most time consuming step)
+
+`python3 crawl_from_video_id.py "dQw4w9WgXcQ" 2 --skiplanguage`
+
+### batch_crawl.py
+* runs crawl_from_video_id.py over a list of video IDs
+
+creating batches of collections:
+1. make a CSV of 11-character video IDs, one column, no header
+2. copy to your home folder on angwin (/nfs/ang/users/kyzheng/batch1.csv)
+
+examples:
+
+`python3 batch_crawl.py batch1.csv`
+
+`python3 batch_crawl.py batch1.csv --skiplanguage`
+
 
 ### personalized_recs.py
 * creates recommendation tree from downloaded YouTube html files
