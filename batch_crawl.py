@@ -1,3 +1,4 @@
+import os
 import argparse
 import subprocess
 import pandas as pd
@@ -9,8 +10,7 @@ parser.add_argument("--skiplanguage", action="store_true", help="if true, skips 
 
 args = parser.parse_args()
 
-file_location = args.file
-df = pd.read_csv(file_location, header=None)
+df = pd.read_csv(os.path.join(os.path.expanduser('~'), args.file), header=None)
 root_ids = df[0].tolist()
 depth = 2
 
