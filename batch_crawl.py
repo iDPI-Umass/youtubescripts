@@ -26,4 +26,5 @@ while not q.empty():
         subprocess.run(query)
     except Exception as e:
         print(e)
+    print(f'{root_id} done')
     q.task_done()
