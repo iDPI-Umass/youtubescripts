@@ -20,7 +20,7 @@ for root_id in root_ids:
 while not q.empty():
     root_id = q.get()
     try:
-        query = ['python3', 'crawl_from_video_id.py', f'\"{root_id}\"', str(depth)]
+        query = ['python3', 'crawl_from_video_id.py', root_id, str(depth)]
         if args.skiplanguage:
             query.append('--skiplanguage')
         subprocess.run(query)
