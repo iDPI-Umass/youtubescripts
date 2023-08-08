@@ -37,21 +37,31 @@ def calculate_vectors(metadata, attribute: str) -> dict:
 
 
 def import_collection_metadata(collection):
-    df = pd.read_csv(os.path.join(ROOT_DIR, "collections", collection, "metadata.csv"))
+    metadata_filename = [f for f in os.listdir(os.path.join(ROOT_DIR, "collections", collection)) if f.endswith(".csv")][0]
+    df = pd.read_csv(os.path.join(ROOT_DIR, "collections", collection, metadata_filename))
     df = df.drop(df[df['upload_date'] != df['upload_date']].index)
     df['upload_year'] = df['upload_date'].apply(lambda x: int("20"+x[-2:]))
     df.loc[df['whisper_probability'] < PROBABILITY_THRESHOLD, 'whisper_lang'] = 'xx'
     return df
 
 
-def collection_comparison(c1, c2):
-    c1_metadata, c2_metadata = import_collection_metadata(c1), import_collection_metadata(c2)
-    # all_attributes = ['view_count', 'like_count', 'duration', 'comment_count', 'channel_follower_count',
-    #                   'whisper_lang', 'accessible_in_youtube_music', 'upload_year']
-    attributes = ['view_count', 'duration', 'upload_year', 'accessible_in_youtube_music', 'whisper_lang']
-    c1_vectors, c2_vectors = [], []
+def get_vector_headers(attributes):
+    headers = []
     for attribute in attributes:
-        c1_vectors += list(calculate_vectors(c1_metadata, attribute).values())
-        c2_vectors += list(calculate_vectors(c2_metadata, attribute).values())
+        headers += bins[attribute]
+    return headers
+
+
+def collection_comparison(c1, c2, attributes=None):
+    if attributes is None:
+        attributes = ['view_count', 'duration', 'upload_year', 'accessible_in_youtube_music', 'whisper_lang']
+    c1_metadata, c2_metadata = import_collection_metadata(c1), import_collection_metadata(c2)
+    c1_headers, c2_headers = c1_metadata.columns.values.tolist(), c2_metadata.columns.values.tolist()
+    c1_vectors, c2_vectors, used_attributes = [], [], []
+    for attribute in attributes:
+        if attribute in c1_headers and attribute in c2_headers:
+            c1_vectors += list(calculate_vectors(c1_metadata, attribute).values())
+            c2_vectors += list(calculate_vectors(c2_metadata, attribute).values())
+            used_attributes.append(attribute)
     cosine_similarity = 1 - distance.cosine(c1_vectors, c2_vectors)
-    return cosine_similarity, attributes, c1_vectors, c2_vectors
+    return cosine_similarity, used_attributes, get_vector_headers(used_attributes), c1_vectors, c2_vectors
