@@ -99,7 +99,7 @@ def json_to_csv(collection):
                          'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
                          'was_live', 'age_limit', '_has_drm', '_type', 'whisper_lang', 'whisper_probability',
-                         'accessible_in_youtube_music']
+                         'accessible_in_youtube_music', 'related_to']
     ytmusic_attributes = ['album', 'artist', 'track', 'release_date', 'release_year']
     other_attributes = ['categories', 'tags', 'automatic_captions', 'subtitles', 'chapters']
 
@@ -126,7 +126,7 @@ def json_to_csv(collection):
                                                                                 '%Y%m%d').strftime('%x')
             if 'categories' in video_metadata.keys():
                 video_metadata_dict['categories'] = video_metadata['categories'][0]
-            for attribute in ['tags', 'chapters']:
+            for attribute in ['tags', 'chapters', 'related_to']:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
             if 'automatic_captions' in video_metadata.keys():

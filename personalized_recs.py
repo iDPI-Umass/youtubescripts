@@ -28,6 +28,7 @@ def worker(q):
                 metadata = json.load(md_file)
             metadata["whisper_lang"] = lang_prediction[0]
             metadata["whisper_probability"] = lang_prediction[1]
+            metadata["related_to"] = flattened[video_id]
             with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
                 json.dump(metadata, md_file)
             os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
