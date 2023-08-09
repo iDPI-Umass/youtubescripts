@@ -80,11 +80,11 @@ example: create a collection of 1000 random prefix-sampled YouTube videos
 ### collection_similarity.py
 * compares two collections of YouTube videos and returns a cosine similarity value for the calculated vectors
 * output: cosine similarity value
-* requires 2 command line arguments: name of collection 1, name of collection2
+* requires at least 2 command line arguments: name of collection1, name of collection2, --[views likes duration comments subscribers year music language]
 
 example: compare a random prefix-sampled collection with a 2-depth recommended from "dQw4w9WgXcQ" collection:
 
-`python3 collection_similarity.py "random_prefix_200_20230601_210754_084511" "recs_dQw4w9WgXcQ_2_20230602_100908_183277"`
+`python3 collection_similarity.py "random_prefix_200_20230601_210754_084511" "recs_dQw4w9WgXcQ_2_20230602_100908_183277" --views --likes --duration --comments --subscribers --year --music --language`
 
 ## file structure
 ```
