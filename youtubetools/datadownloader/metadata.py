@@ -65,11 +65,15 @@ def download_metadata_transcripts(collection, video_id, options=None):
                 log_error(collection, video_id, "datadownloader_metadata_metadata", e)
             metadata_keys = video_metadata.keys()
             if not bool(options):  # default behavior (search YouTube Music, fetch auto/uploaded transcripts)
+                # search YouTube Music
                 if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
                     video_metadata["accessible_in_youtube_music"] = True
                 else:
                     video_metadata["accessible_in_youtube_music"] = search_youtube_music(collection, video_id)
+
+                # download transcripts
                 if "is_live" in video_metadata.keys() and video_metadata["is_live"]:
+                    # subtitle download goes forever if video is live while trying to download subtitles
                     pass
                 else:
                     try:
@@ -89,6 +93,8 @@ def download_metadata_transcripts(collection, video_id, options=None):
                     __download_subtitles(collection, video_id, video_metadata)
                 if "skip_automatic_captions" in options.keys() and not options["skip_automatic_captions"]:
                     __download_automatic_captions(collection, video_id, video_metadata)
+                if "skip_metadata_save" not in options.keys():
+                    json.dump(video_metadata, f)
                 if "skip_metadata_save" in options.keys() and not options["skip_metadata_save"]:
                     json.dump(video_metadata, f)
 

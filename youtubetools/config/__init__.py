@@ -128,23 +128,21 @@ def collection_init(collection_name):
     if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
         try:
-            os.chmod(os.path.join(ROOT_DIR, "collections"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+            os.chmod(os.path.join(ROOT_DIR, "collections"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
         except:
             pass
 
-
-
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "logs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
 
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), stat.S_IRUSR | stat.S_IWUSR | stat.S_IXUSR)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
