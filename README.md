@@ -23,6 +23,20 @@ spidering, language identification, transcription, random prefix sampling, rando
 
 ## sample scripts
 
+### get_metadata.py
+* creates a collection from a CSV of video IDs
+* options to speed up metadata downloading:
+  * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
+  * --skipsubtitles skips downloading subtitles created by the uploader
+  * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
+  * --skiplanguage skips downloading audio and using Whisper to classify video language
+
+creating a collection:
+1. make a CSV of 11-character video IDs, one column, no header
+2. copy CSV file to your home folder on angwin (/nfs/ang/users/kyzheng/Book1.csv)
+
+`python3 get_metadata.py Book1.csv --skipmusicsearch --skipsubtitles --skipautocaptions --skiplanguage`
+
 ### crawl_from_video_id.py
 * creates a collection of recommended videos from a given video ID
 * detects language of audio with Whisper, searches for video in YouTube Music
@@ -42,7 +56,7 @@ example: same as above, but skip classifying language and downloading audio (the
 
 creating batches of collections:
 1. make a CSV of 11-character video IDs, one column, no header
-2. copy to your home folder on angwin (/nfs/ang/users/kyzheng/batch1.csv)
+2. copy CSV files to your home folder on angwin (/nfs/ang/users/kyzheng/batch1.csv)
 
 examples:
 
