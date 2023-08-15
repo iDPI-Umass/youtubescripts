@@ -1,8 +1,13 @@
 import os
 import stat
+import datetime
+
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
+
 DEFAULT_WHISPER_MODEL = "small"
+
 MAX_SPIDERING_THREADS = 10
+
 PROBABILITY_THRESHOLD = 0.9
 
 LANGUAGES = {
@@ -123,26 +128,38 @@ TO_LANGUAGE_CODE = {
     "castilian": "es",
 }
 
+BINS = {
+    'view_count': [0]+[10**a for a in range(11)],  # max 12,000,000,000 views
+    'like_count': [0]+[10**a for a in range(8)],  # max 51,000,000 likes
+    'duration': [0]+[10**a for a in range(7)],  # max 2,147,400 seconds
+    'comment_count': [0]+[10**a for a in range(8)],  # max 19,000,000 comments
+    'channel_follower_count': [0]+[10**a for a in range(9)],  # max 243,000,000 subscribers
+    'whisper_lang': list(LANGUAGES.keys()),
+    'accessible_in_youtube_music': [True, False],
+    'upload_year': [year for year in range(2005, int(datetime.date.today().year+1))]
+}
+
 
 def collection_init(collection_name):
     if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
         try:
-            os.chmod(os.path.join(ROOT_DIR, "collections"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
-        except:
+            os.chmod(os.path.join(ROOT_DIR, "collections"),
+                     stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+        except Exception as e:
             pass
-
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
-
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name),
+             stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "logs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
-
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"),
+             stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
-
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"),
+             stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
-
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"),
+             stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"))
-    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"), stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+    os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"),
+             stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
