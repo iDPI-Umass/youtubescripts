@@ -1,3 +1,6 @@
+"""
+functions to download audio
+"""
 import os
 import time
 import subprocess
@@ -6,6 +9,15 @@ from youtubetools.logger import log_error
 
 
 def download_audio_track(collection: str, video_id: str, options: dict = None) -> str:
+    """
+    downloads mono 16khz audio for any YouTube video
+    :param collection: name of collection folder
+    :param video_id: 11 character video ID
+    :param options: TODO
+    :return: .wav file address
+    """
+
+    # skip downloading if .wav file already exists
     if os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, f"{video_id}.wav")):
         return os.path.join(ROOT_DIR, "collections", collection, f"{video_id}.wav")
 

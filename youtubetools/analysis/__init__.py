@@ -2,7 +2,7 @@
 provides functions for analyzing and comparing collections
 
 functions:
-collection_comparison(c1, c2, attributes=None)
+collection_comparison: calculates cosine similarity for selected attributes between any two collections
 """
 
 from youtubetools.analysis.analyze import collection_comparison

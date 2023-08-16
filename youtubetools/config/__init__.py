@@ -1,15 +1,26 @@
+"""
+provides helpful variables and functions
+
+functions:
+collection_init: sets up folders for a new collection
+"""
 import os
 import stat
 import datetime
 
+# root directory is defined as the folder that is two levels up from this file
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
 
+# sets whisper model size
 DEFAULT_WHISPER_MODEL = "small"
 
+# limits how many recommendation scraping threads can run at one time
 MAX_SPIDERING_THREADS = 10
 
+# whisper language predictions lower than this threshold will be replaced with "xx" in vector calculations
 PROBABILITY_THRESHOLD = 0.9
 
+# whisper languages
 LANGUAGES = {
     "en": "english",
     "zh": "chinese",
@@ -128,6 +139,7 @@ TO_LANGUAGE_CODE = {
     "castilian": "es",
 }
 
+# bins for vector / cosine similarity calculations
 BINS = {
     'view_count': [0]+[10**a for a in range(11)],  # max 12,000,000,000 views
     'like_count': [0]+[10**a for a in range(8)],  # max 51,000,000 likes
@@ -140,14 +152,18 @@ BINS = {
 }
 
 
-def collection_init(collection_name):
+def collection_init(collection_name: str):
+    """
+    initializes folders for a new collection
+    :param collection_name: name of collection to initialize
+    """
     if not os.path.exists(os.path.join(ROOT_DIR, "collections")):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
         try:
             os.chmod(os.path.join(ROOT_DIR, "collections"),
                      stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
         except Exception as e:
-            pass
+            print(e)
     os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
     os.chmod(os.path.join(ROOT_DIR, "collections", collection_name),
              stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)

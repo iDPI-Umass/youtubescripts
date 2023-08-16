@@ -1,3 +1,6 @@
+"""
+functions to download data from YouTube
+"""
 import os
 import json
 from youtubetools.config import ROOT_DIR
@@ -5,14 +8,16 @@ from youtubetools.datadownloader.audio import download_audio_track
 from youtubetools.datadownloader.metadata import download_metadata_transcripts
 
 
-def download_data(collection, video_id, download_options=(True, True), metadata_options=None, audio_options=None):
+def download_data(collection: str, video_id: str, download_options=(True, True), metadata_options=None,
+                  audio_options=None):
     """
 
-    :param collection:
-    :param video_id:
-    :param download_options: (download audio, download metadata+transcripts)
-    :param audio_options:
-    :param metadata_options:
+    :param collection: name of collection folder
+    :param video_id: 11 character video ID
+    :param download_options: (if True download audio, if True download metadata+transcripts)
+    :param metadata_options: {"skip_youtube_music_search":True/False, "skip_subtitles":True/False,
+                              "skip_automatic_captions":True/False, "skip_metadata_save":True/False}
+    :param audio_options: TODO
     :return:
     """
     if metadata_options is None:

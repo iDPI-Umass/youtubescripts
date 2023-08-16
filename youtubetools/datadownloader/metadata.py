@@ -1,3 +1,6 @@
+"""
+functions to download and process metadata
+"""
 import os
 import json
 import yt_dlp
@@ -8,7 +11,12 @@ from youtubetools.logger import log_error
 from youtubetools.datadownloader.youtubemusicsearch import search_youtube_music
 
 
-def download_metadata(video_id: str):
+def download_metadata(video_id: str) -> dict:
+    """
+    downloads metadata for a YouTube video
+    :param video_id: 11 character video ID
+    :return: metadata dict
+    """
     ydl_opts = {
         "skip_download": True,
         "quiet": True
@@ -18,6 +26,13 @@ def download_metadata(video_id: str):
 
 
 def __download_subtitles(collection: str, video_id: str, video_metadata: dict) -> list:
+    """
+    downloads user-uploaded subtitle files for a YouTube video
+    :param collection: name of collection folder
+    :param video_id: 11 character video ID
+    :param video_metadata: metadata dict
+    :return: list of subtitles downloaded
+    """
     subtitles = list(video_metadata["subtitles"].keys())
     if len(subtitles) > 0:
         ydl_opts = {
@@ -33,11 +48,25 @@ def __download_subtitles(collection: str, video_id: str, video_metadata: dict) -
     return []
 
 
-def __download_automatic_captions(collection, video_id, video_metadata: dict, get_english_translation: bool = False):
+def __download_automatic_captions(collection: str, video_id: str, video_metadata: dict,
+                                  get_english_translation: bool = False) -> None:
+    """
+    downloads auto-generated caption files and live chat logs for a YouTube video
+    :param collection: name of collection folder
+    :param video_id: 11 characer video ID
+    :param video_metadata: metadata dict
+    :param get_english_translation: flag to download english translation of auto caption, if available
+    :return: None
+    """
     automatic_captions = video_metadata["automatic_captions"].keys()
+
+    # caption files that have "-orig" are in the language identified by YouTube
     orig_lang = [lang for lang in automatic_captions if "-orig" in lang]
+
+    # optional: download english translation of original language, if available
     if get_english_translation:
         orig_lang += [lang for lang in automatic_captions if lang.lower().startswith("en")]
+
     if len(orig_lang) > 0:
         ydl_opts = {
             "skip_download": True,
@@ -50,7 +79,14 @@ def __download_automatic_captions(collection, video_id, video_metadata: dict, ge
             ydl.download([video_id])
 
 
-def download_metadata_transcripts(collection, video_id, options=None):
+def download_metadata_transcripts(collection: str, video_id: str, options: dict = None) -> None:
+    """
+    consolidated function for downloading metadata and transcripts
+    :param collection: name of collection folder
+    :param video_id: 11 character video ID
+    :param options: dict of download options
+    :return: None
+    """
     if options is None:
         options = {}
     assert os.path.exists(os.path.join(ROOT_DIR, "collections", collection, "metadata")), \
@@ -99,7 +135,12 @@ def download_metadata_transcripts(collection, video_id, options=None):
                     json.dump(video_metadata, f)
 
 
-def json_to_csv(collection):
+def json_to_csv(collection: str) -> None:
+    """
+    consolidates metadata JSON files into a single CSV file for a collection
+    :param collection: name of collection folder
+    :return: None
+    """
     collection_metadata = []
     simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
                          'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',

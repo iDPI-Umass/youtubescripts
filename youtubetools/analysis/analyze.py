@@ -6,7 +6,7 @@ import os
 import pandas as pd
 from scipy.spatial import distance
 from youtubetools.logger import log_error
-from youtubetools.config import BINS, ROOT_DIR, LANGUAGES, PROBABILITY_THRESHOLD
+from youtubetools.config import BINS, ROOT_DIR, PROBABILITY_THRESHOLD
 
 """
 all 
@@ -106,5 +106,5 @@ def collection_comparison(c1: str, c2: str, attributes=None):
 
     # calculate cosine similarity (equivalent to 1 - cosine distance)
     cosine_similarity = 1 - distance.cosine(c1_vectors, c2_vectors)
-    
+
     return cosine_similarity, used_attributes, get_vector_headers(used_attributes), c1_vectors, c2_vectors
