@@ -1,11 +1,14 @@
+"""
+function to interact with selected language identification model
+"""
 import os
 from youtubetools.config import ROOT_DIR, DEFAULT_WHISPER_MODEL
 
 
 def identify_language(wav_filepath: str, model_selector: list = (0, DEFAULT_WHISPER_MODEL)) -> tuple[str, float]:
     """
-
-    :param wav_filepath:
+    identifies spoken language of a given wav file
+    :param wav_filepath: location of wav file, in collection_name/wavs/testvideoid.wav format
     :param model_selector: (model) or (model, model_attribute)
 
                            model: 0 -> whisper , 1 -> voxlingua107
@@ -13,6 +16,7 @@ def identify_language(wav_filepath: str, model_selector: list = (0, DEFAULT_WHIS
                            optional:
                            model_attribute: if whisper is selected, then str with model name (small default)
                                             if vl107 is selected, then int with chunk length in seconds (30 default)
+    :return: tuple(language code: str, probability: float)
     """
     assert 1 <= len(model_selector) < 3, "model_selector must have 1 or 2 arguments"
     assert len(wav_filepath.split(os.sep)) == 3 and wav_filepath.split(os.sep)[1] == "wavs", \
@@ -22,14 +26,16 @@ def identify_language(wav_filepath: str, model_selector: list = (0, DEFAULT_WHIS
 
     language, probability = "", 0
 
-    if model_selector[0] == 0:  # whisper model
+    # whisper model
+    if model_selector[0] == 0:
         from youtubetools.languageidentifier.model_whisper import classify_language_whisper
         if len(model_selector) == 1:
             language, probability = classify_language_whisper(wav_filepath)
         elif len(model_selector) == 2:
             language, probability = classify_language_whisper(wav_filepath=wav_filepath, model=model_selector[1])
 
-    elif model_selector[0] == 1:  # voxlingua107 model
+    # voxlingua107 model
+    elif model_selector[0] == 1:
         from youtubetools.languageidentifier.model_voxlingua import classify_language_voxlingua
         if len(model_selector) == 1:
             language, probability = classify_language_voxlingua(wav_filepath)

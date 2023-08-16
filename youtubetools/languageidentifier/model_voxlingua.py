@@ -1,3 +1,6 @@
+"""
+language identification with the voxlingua107 model
+"""
 import os
 from youtubetools.config import ROOT_DIR
 from speechbrain.pretrained import EncoderClassifier
@@ -30,10 +33,10 @@ def __classify_language(wav_file: str, collection: str, chunk_seconds: int) -> t
 
 def classify_language_voxlingua(wav_filepath: str, chunk_seconds: int = 30) -> tuple[str, float]:
     """
-
+    classifies spoken language of wav file using voxlingua107 model
     :param chunk_seconds: seconds per chunk, defaults to 30 seconds
     :param wav_filepath: "collection_name/wavs/testvideoid.wav"
-    :return: (language_code, confidence)
+    :return: tuple(language_code: str, confidence: float)
     """
 
     filepath = os.path.split(wav_filepath)

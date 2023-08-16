@@ -11,7 +11,7 @@ from youtubetools.datadownloader.metadata import download_metadata_transcripts
 def download_data(collection: str, video_id: str, download_options=(True, True), metadata_options=None,
                   audio_options=None):
     """
-
+    wrapper function for downloading data (audio, metadata, transcripts) from YouTube
     :param collection: name of collection folder
     :param video_id: 11 character video ID
     :param download_options: (if True download audio, if True download metadata+transcripts)
@@ -26,11 +26,16 @@ def download_data(collection: str, video_id: str, download_options=(True, True),
         audio_options = {}
 
     assert len(video_id) == 11, "video_id must be 11 characters long"
-    if download_options[1] or download_options[0]:  # download metadata and transcripts by default
+
+    # download metadata and transcripts (must download metadata if downloading audio)
+    if download_options[1] or download_options[0]:
         download_metadata_transcripts(collection, video_id, metadata_options)
-    if download_options[0]:  # download audio
+
+    # download audio
+    if download_options[0]:
         with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f'{video_id}.json'), 'r') as md_file:
             metadata = json.load(md_file)
-        if "is_live" in metadata.keys() and metadata["is_live"]:  # download audio track by default, not live
-            return
+            # downloading audio from actively live video results in potentially infinite download
+            if "is_live" in metadata.keys() and metadata["is_live"]:
+                return
         download_audio_track(collection, video_id, audio_options)

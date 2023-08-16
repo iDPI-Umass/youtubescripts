@@ -7,7 +7,7 @@ from youtubetools.logger import log_error
 
 def __ytm_search(collection: str, video_id: str) -> bool:
     """
-
+    searches for a video in YouTube Music
     :param collection: name of collection folder
     :param video_id: 11 character video ID
     :return: bool of video's availability in YouTube Music
@@ -36,7 +36,7 @@ def __ytm_search(collection: str, video_id: str) -> bool:
 
 def search_youtube_music(collection: str, video_id: str) -> bool:
     """
-    wrapper for __ytm_search with valid input check
+    wrapper for __ytm_search function with input character length checking
     :param collection: name of collection folder
     :param video_id: 11 character video ID
     :return: bool of video's availability in YouTube Music

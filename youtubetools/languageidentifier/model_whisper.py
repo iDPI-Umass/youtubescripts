@@ -1,3 +1,7 @@
+"""
+language identification with openai's whisper model
+adapted from: https://discuss.huggingface.co/t/language-detection-with-whisper/26003
+"""
 import os
 import torch
 import operator

@@ -1,7 +1,7 @@
 import os
 import json
-from datetime import datetime
 from bs4 import BeautifulSoup
+from datetime import datetime
 from youtubetools.config import ROOT_DIR, collection_init
 
 
@@ -35,4 +35,3 @@ def create_personalized_rec_collection(folder, seed_id):
     with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:
         json.dump(tree, file, indent=4)
     return collection
-
