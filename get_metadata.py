@@ -46,8 +46,8 @@ def worker(q):
         video_id = q.get()
         download_data(collection, video_id, download_options=download_options, metadata_options=metadata_options)
         if not args.skiplanguage:  # language id
-            if os.path.isfile(os.path.join(collection, "wavs", f"{video_id}.wav")) and os.path.isfile(
-                    os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json")):
+            if (os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav")) and
+                    os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"))):
                 lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
                 with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"),
                           "r") as md_file:
