@@ -24,24 +24,35 @@ spidering, language identification, transcription, random prefix sampling, rando
 ## sample scripts
 
 ### get_metadata.py
-* creates a collection from a CSV of video IDs
-* options to speed up metadata downloading:
+* creates a collection of known YouTube videos from a CSV of video IDs
+* output: collection_metadata.csv, .json metadata files, .wav audio files (optional), transcript files (optional)
+* requires 1 command line argument: CSV filename
+
+* options:
   * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
   * --skipsubtitles skips downloading subtitles created by the uploader
   * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
   * --skiplanguage skips downloading audio and using Whisper to classify video language
+  * --saveaudio keeps .wav files and saves it to collections/collection_name/wavs
 
 creating a collection:
 1. make a CSV of 11-character video IDs, one column, no header
-2. copy CSV file to your home folder on angwin (/nfs/ang/users/kyzheng/Book1.csv)
+2. copy CSV file to your home folder (/nfs/ang/users/kyzheng/Book1.csv)
 
 `python3 get_metadata.py Book1.csv --skipmusicsearch --skipsubtitles --skipautocaptions --skiplanguage`
 
 ### crawl_from_video_id.py
 * creates a collection of recommended videos from a given video ID
-* detects language of audio with Whisper, searches for video in YouTube Music
-* output: metadata.csv, recommendation tree, any available transcripts, metadata JSON files
-* requires 2 command line arguments: video ID, tree depth
+* depth of 1 creates a collection of ~20 videos, depth of 2 creates a collection of ~400 videos, depth of 3 creates a collection of ~8000 videos
+* output: collection_metadata.csv, tree.json, .json metadata files, .wav audio files (optional), transcript files (optional)
+* requires 2 command line arguments: starting video ID, tree depth
+
+* options:
+  * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
+  * --skipsubtitles skips downloading subtitles created by the uploader
+  * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
+  * --skiplanguage skips downloading audio and using Whisper to classify video language
+  * --saveaudio keeps .wav files and saves it to collections/collection_name/wavs
 
 example: create a collection of recommendations from dQw4w9WgXcQ, and recommendations from those recommendations: 
 
@@ -53,6 +64,13 @@ example: same as above, but skip classifying language and downloading audio (the
 
 ### batch_crawl.py
 * runs crawl_from_video_id.py over a list of video IDs
+
+* options:
+  * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
+  * --skipsubtitles skips downloading subtitles created by the uploader
+  * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
+  * --skiplanguage skips downloading audio and using Whisper to classify video language
+  * --saveaudio keeps .wav files and saves it to collections/collection_name/wavs
 
 creating batches of collections:
 1. make a CSV of 11-character video IDs, one column, no header
@@ -66,8 +84,8 @@ examples:
 
 
 ### personalized_recs.py
-* creates recommendation tree from downloaded YouTube html files
-* `folder_containing_html_files` should be in a folder in your home folder on angwin
+* creates personalized recommendation tree from downloaded YouTube html files
+* `folder_on_angwin_containing_html_files` should be in a folder in your home folder on angwin
 
 creating a personalized recommended collection:
 1. open Chrome and pick an initial YouTube video to start from
