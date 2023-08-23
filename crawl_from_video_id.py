@@ -1,3 +1,6 @@
+"""
+creates a collection of recommended videos from a given video ID
+"""
 import argparse
 import progressbar
 from queue import Queue
@@ -22,7 +25,7 @@ metadata_options = {
     "skip_subtitles": args.skipsubtitles,
     "skip_automatic_captions": args.skipautocaptions
 }
-download_options = [(not args.skiplanguage or args.saveaudio), True]  # download audio, download metadata
+download_options = ((not args.skiplanguage or args.saveaudio), True)  # download audio, download metadata
 
 
 max_threads = 10

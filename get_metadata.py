@@ -1,3 +1,6 @@
+"""
+creates a collection of known YouTube videos from a CSV of video IDs
+"""
 import os
 import argparse
 import progressbar

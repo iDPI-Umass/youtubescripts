@@ -1,3 +1,6 @@
+"""
+creates a collection of random, prefix-sampled YouTube videos
+"""
 import os
 import argparse
 import progressbar

@@ -1,3 +1,6 @@
+"""
+creates personalized recommendation tree from downloaded YouTube html files
+"""
 import argparse
 import progressbar
 from queue import Queue
@@ -5,7 +8,6 @@ from threading import Thread
 from youtubetools.youtubescripts import youtube_tools
 from youtubetools.datadownloader import json_to_csv
 from youtubetools.recommendationscraper import flatten_dict, create_personalized_rec_collection
-
 
 max_threads = 10
 parser = argparse.ArgumentParser()
@@ -35,7 +37,8 @@ pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelB
 def worker(q):
     while not q.empty():
         video_id = q.get()
-        youtube_tools(collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage, flattened[video_id])
+        youtube_tools(collection, video_id, download_options, metadata_options,
+                      args.saveaudio, args.skiplanguage, flattened[video_id])
         pbar.update((total_videos-q.qsize())/total_videos*100)
         q.task_done()
 

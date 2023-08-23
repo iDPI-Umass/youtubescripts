@@ -1,6 +1,8 @@
+"""
+compares two collections of YouTube videos and returns a cosine similarity value for the calculated vectors
+"""
 import argparse
 from youtubetools.analysis import collection_comparison
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument("collection1", type=str)
