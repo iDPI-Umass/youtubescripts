@@ -1,38 +1,41 @@
 import os
-import sys
-import json
+import argparse
 import progressbar
 from queue import Queue
 from threading import Thread
 from youtubetools.config import ROOT_DIR
-from youtubetools.logger import log_error
-from youtubetools.languageidentifier import identify_language
+from youtubetools.datadownloader import json_to_csv
+from youtubetools.youtubescripts import youtube_tools
 from youtubetools.randomsampler import get_random_prefix_sample
-from youtubetools.datadownloader import download_data, json_to_csv
 
 max_threads = 10
-sample_size = int(sys.argv[1])
+parser = argparse.ArgumentParser()
+parser.add_argument("size", type=int, help="folder in your angwin home folder")
+parser.add_argument("--skipmusicsearch", action="store_true")
+parser.add_argument("--skipsubtitles", action="store_true")
+parser.add_argument("--skipautocaptions", action="store_true")
+parser.add_argument("--skiplanguage", action="store_true", help="if true, skips language detection")
+parser.add_argument("--saveaudio", action="store_true")
+
+args = parser.parse_args()
+metadata_options = {
+    "skip_youtube_music_search": args.skipmusicsearch,
+    "skip_subtitles": args.skipsubtitles,
+    "skip_automatic_captions": args.skipautocaptions
+}
+download_options = ((not args.skiplanguage or args.saveaudio), True)  # download audio, download metadata
+
+sample_size = args.size
 collection = get_random_prefix_sample(sample_size)
 with open(os.path.join(ROOT_DIR, "collections", collection, "randomids.txt"), "r") as f:
     ids = [random_id[0:11] for random_id in f.readlines()]
 pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
 
+
 def worker(q):
     while not q.empty():
         video_id = q.get()
-        download_data(collection, video_id)
-        if os.path.isfile(os.path.join(collection, "wavs", f"{video_id}.wav")) and os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json")):
-            lang_prediction = identify_language(os.path.join(collection, "wavs", f"{video_id}.wav"))
-            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r") as md_file:
-                metadata = json.load(md_file)
-            metadata["whisper_lang"] = lang_prediction[0]
-            metadata["whisper_probability"] = lang_prediction[1]
-            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
-                json.dump(metadata, md_file)
-
-            os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
-        else:
-            log_error(collection, video_id, "prefix_sample", f"audio and/or metadata for {video_id} not downloaded")
+        youtube_tools(collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage)
         pbar.update((len(ids) - q.qsize()) / len(ids) * 100)
         q.task_done()
 
