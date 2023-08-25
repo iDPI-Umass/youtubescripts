@@ -87,6 +87,13 @@ examples:
 * creates personalized recommendation tree from downloaded YouTube html files
 * `folder_on_angwin_containing_html_files` should be in a folder in your home folder on angwin
 
+* options:
+  * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
+  * --skipsubtitles skips downloading subtitles created by the uploader
+  * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
+  * --skiplanguage skips downloading audio and using Whisper to classify video language
+  * --saveaudio keeps .wav files and saves it to collections/collection_name/wavs
+
 creating a personalized recommended collection:
 1. open Chrome and pick an initial YouTube video to start from
 2. hold down cmd (Mac) or ctrl (Windows) and click on each recommended video to open in a new background tab
@@ -103,6 +110,13 @@ creating a personalized recommended collection:
 * detects language of audio with Whisper, searches for video in YouTube Music
 * output: metadata.csv, list of random IDs, any available transcripts, metadata JSON files
 * requires 1 command line argument: minimum random sample size
+
+* options:
+  * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
+  * --skipsubtitles skips downloading subtitles created by the uploader
+  * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
+  * --skiplanguage skips downloading audio and using Whisper to classify video language
+  * --saveaudio keeps .wav files and saves it to collections/collection_name/wavs
 
 example: create a collection of 1000 random prefix-sampled YouTube videos
 
