@@ -21,7 +21,7 @@ def youtube_tools(
             metadata = json.load(md_file)
             metadata["related_to"] = related_to
         with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w") as md_file:
-            json.dump(metadata, md_file)
+            json.dump(metadata, md_file, indent=4)
 
     if not skip_language:
         if (os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav")) and
@@ -35,7 +35,7 @@ def youtube_tools(
             metadata["whisper_probability"] = lang_prediction[1]
             with (open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "w")
                   as md_file):
-                json.dump(metadata, md_file)
+                json.dump(metadata, md_file, indent=4)
             if not save_audio:
                 os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
         else:

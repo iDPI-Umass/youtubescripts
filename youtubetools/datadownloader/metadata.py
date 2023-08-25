@@ -118,7 +118,7 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
                     except Exception as e:
                         log_error(collection, video_id, "datadownloader_metadata_subtitles", e)
 
-                json.dump(video_metadata, f)
+                json.dump(video_metadata, f, indent=4)
             else:
                 if "skip_youtube_music_search" in options.keys() and not options["skip_youtube_music_search"]:
                     if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
@@ -130,9 +130,9 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
                 if "skip_automatic_captions" in options.keys() and not options["skip_automatic_captions"]:
                     __download_automatic_captions(collection, video_id, video_metadata)
                 if "skip_metadata_save" not in options.keys():
-                    json.dump(video_metadata, f)
+                    json.dump(video_metadata, f, indent=4)
                 if "skip_metadata_save" in options.keys() and not options["skip_metadata_save"]:
-                    json.dump(video_metadata, f)
+                    json.dump(video_metadata, f, indent=4)
 
 
 def json_to_csv(collection: str) -> None:
@@ -142,7 +142,7 @@ def json_to_csv(collection: str) -> None:
     :return: None
     """
     collection_metadata = []
-    simple_attributes = ['id', 'title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
+    simple_attributes = ['title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
                          'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',
                          'channel_follower_count', 'uploader', 'uploader_id', 'availability', 'live_status', 'is_live',
                          'was_live', 'age_limit', '_has_drm', '_type', 'whisper_lang', 'whisper_probability',
@@ -159,6 +159,7 @@ def json_to_csv(collection: str) -> None:
         else:
             with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r") as metadata_file:
                 video_metadata = json.load(metadata_file)
+            video_metadata_dict['id'] = json_file.split('.')[0]
             for attribute in simple_attributes:
                 if attribute in video_metadata.keys():
                     video_metadata_dict[attribute] = video_metadata[attribute]
