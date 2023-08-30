@@ -116,8 +116,8 @@ def get_recommendation_tree(video_id, layers=2):
 
     scraper = RecommendationScraper(collection, video_id, layers)
     tree = scraper.bfs()
-    with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:
-        json.dump(tree, file, indent=4)
+    with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w", encoding='utf8') as file:
+        json.dump(tree, file, indent=4, ensure_ascii=False)
 
     return collection
 

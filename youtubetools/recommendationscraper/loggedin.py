@@ -32,6 +32,6 @@ def create_personalized_rec_collection(folder, seed_id):
     collection = f"recs_{seed_id}_2_personal_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
     collection_init(collection)
     tree = html_files_to_tree(folder, seed_id)
-    with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w") as file:
-        json.dump(tree, file, indent=4)
+    with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w", encoding='utf8') as file:
+        json.dump(tree, file, indent=4, ensure_ascii=False)
     return collection

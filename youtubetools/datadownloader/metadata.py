@@ -96,7 +96,8 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
         f"metadata folder for {collection} collection does not exist"
 
     if f"{video_id}.json" not in os.listdir(os.path.join(ROOT_DIR, "collections", collection, "metadata")):
-        with open(f"{os.path.join(ROOT_DIR, 'collections', collection, 'metadata')}/{video_id}.json", "w") as f:
+        with open(f"{os.path.join(ROOT_DIR, 'collections', collection, 'metadata')}/{video_id}.json", "w",
+                  encoding='utf8') as f:
             try:
                 video_metadata = download_metadata(video_id)
             except Exception as e:
@@ -121,7 +122,7 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
                     except Exception as e:
                         log_error(collection, video_id, "datadownloader_metadata_subtitles", e)
 
-                json.dump(video_metadata, f, indent=4)
+                json.dump(video_metadata, f, indent=4, ensure_ascii=False)
             else:
                 if "skip_youtube_music_search" in options.keys() and not options["skip_youtube_music_search"]:
                     if 'album' in metadata_keys and 'artist' in metadata_keys and 'track' in metadata_keys:
@@ -133,9 +134,9 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
                 if "skip_automatic_captions" in options.keys() and not options["skip_automatic_captions"]:
                     __download_automatic_captions(collection, video_id, video_metadata)
                 if "skip_metadata_save" not in options.keys():
-                    json.dump(video_metadata, f, indent=4)
+                    json.dump(video_metadata, f, indent=4, ensure_ascii=False)
                 if "skip_metadata_save" in options.keys() and not options["skip_metadata_save"]:
-                    json.dump(video_metadata, f, indent=4)
+                    json.dump(video_metadata, f, indent=4, ensure_ascii=False)
 
 
 def json_to_csv(collection: str) -> None:
@@ -160,7 +161,8 @@ def json_to_csv(collection: str) -> None:
         if os.stat(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file)).st_size == 0:
             video_metadata_dict['id'] = json_file.split('.')[0]
         else:
-            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r") as metadata_file:
+            with (open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r", encoding='utf8')
+                  as metadata_file):
                 video_metadata = json.load(metadata_file)
             video_metadata_dict['id'] = json_file.split('.')[0]
             for attribute in simple_attributes:
