@@ -39,7 +39,8 @@ def download_data(collection: str, video_id: str, download_options=(True, True),
     # download audio
     if download_options[0]:
         try:
-            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f'{video_id}.json'), 'r') as md_file:
+            with open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f'{video_id}.json'), 'r',
+                      encoding='utf8') as md_file:
                 metadata = json.load(md_file)
                 # downloading audio from actively live video results in potentially infinite download
                 if "is_live" in metadata.keys() and metadata["is_live"]:
