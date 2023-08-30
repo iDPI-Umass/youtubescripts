@@ -62,7 +62,7 @@ class RandomPrefixSampler:
         """
         self.pbar.start()
         threads = []
-        for i in range(max(1, min(MAX_SPIDERING_THREADS, self.n / 5))):  # 5 char-length prefix returns ~5 per search
+        for i in range(max(1, min(MAX_SPIDERING_THREADS, int(self.n / 5)))):  # 5 char-length prefix returns ~5 per search
             worker = Thread(target=self.__search)
             threads.append(worker)
             worker.start()
