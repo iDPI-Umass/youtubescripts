@@ -25,7 +25,7 @@ def download_audio_track(collection: str, video_id: str, options: dict = None) -
     while tries < 5:
         try:
             subprocess.run(
-                ['yt-dlp', '-q', '-o', os.path.join(ROOT_DIR, "collections", collection, "wavs", "%(id)s.%(ext)s"),
+                ['yt-dlp', '-q', '--no-progress', '-o', os.path.join(ROOT_DIR, "collections", collection, "wavs", "%(id)s.%(ext)s"),
                  '-x', '--audio-format', 'wav', '--audio-quality', '256K', '--ppa', 'ffmpeg:-ar 16000 -ac 1',
                  f'https://www.youtube.com/watch?v={video_id}'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             return os.path.join(ROOT_DIR, "collections", collection, f"{video_id}.wav")

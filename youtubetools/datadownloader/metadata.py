@@ -19,7 +19,8 @@ def download_metadata(video_id: str) -> dict:
     """
     ydl_opts = {
         "skip_download": True,
-        "quiet": True
+        "quiet": True,
+        "noprogress": True
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         return ydl.sanitize_info(ydl.extract_info(video_id, download=False))
@@ -38,6 +39,7 @@ def __download_subtitles(collection: str, video_id: str, video_metadata: dict) -
         ydl_opts = {
             "skip_download": True,
             "quiet": True,
+            "noprogress": True,
             "writesubtitles": True,
             "subtitleslangs": subtitles,
             "outtmpl": f"{os.path.join(ROOT_DIR, 'collections', collection, 'transcripts')}/%(id)s.%(ext)s"
@@ -71,6 +73,7 @@ def __download_automatic_captions(collection: str, video_id: str, video_metadata
         ydl_opts = {
             "skip_download": True,
             "quiet": True,
+            "noprogress": True,
             "writeautomaticsub": True,
             "subtitleslangs": orig_lang,
             "outtmpl": f"{os.path.join(ROOT_DIR, 'collections', collection, 'transcripts')}/%(id)s.auto.%(ext)s"
