@@ -161,26 +161,26 @@ def collection_init(collection_name: str):
         os.makedirs(os.path.join(ROOT_DIR, "collections"))
         try:
             os.chmod(os.path.join(ROOT_DIR, "collections"),
-                     stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                     stat.S_IRWXU | stat.S_IRGRP | stat.S_IRWXO)
         except Exception as e:
             print(e)
     if not os.path.exists(os.path.join(ROOT_DIR, "collections", collection_name)):
         os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name))
         os.chmod(os.path.join(ROOT_DIR, "collections", collection_name),
-                 stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                 stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
     if not os.path.exists(os.path.join(ROOT_DIR, "collections", collection_name, "logs")):
         os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "logs"))
         os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "logs"),
-                 stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                 stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
     if not os.path.exists(os.path.join(ROOT_DIR, "collections", collection_name, "metadata")):
         os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"))
         os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "metadata"),
-                 stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                 stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
     if not os.path.exists(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts")):
         os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"))
         os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "transcripts"),
-                 stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                 stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
     if not os.path.exists(os.path.join(ROOT_DIR, "collections", collection_name, "wavs")):
         os.makedirs(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"))
         os.chmod(os.path.join(ROOT_DIR, "collections", collection_name, "wavs"),
-                 stat.S_IRWXU | stat.S_IRGRP | stat.S_IROTH)
+                 stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
