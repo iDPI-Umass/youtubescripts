@@ -66,6 +66,8 @@ example: same as above, but skip classifying language and downloading audio (the
 * runs crawl_from_video_id.py over a list of video IDs
 
 * options:
+  * CSV filename (in home folder on angwin)
+  * layers (2 --> ~400 videos in the resulting collection)
   * --skipmusicsearch skips searching YouTube Music (resulting metadata CSV will not contain the is_music field)
   * --skipsubtitles skips downloading subtitles created by the uploader
   * --skipautocaptions skips downloading YouTube's automatically generated captions and live chat transcripts
@@ -78,9 +80,9 @@ creating batches of collections:
 
 examples:
 
-`python3 batch_crawl.py batch1.csv`
+`python3 batch_crawl.py batch1.csv 2`
 
-`python3 batch_crawl.py batch1.csv --skiplanguage`
+`python3 batch_crawl.py batch1.csv 2 --skiplanguage`
 
 
 ### personalized_recs.py
