@@ -44,9 +44,12 @@ def __download_subtitles(collection: str, video_id: str, video_metadata: dict) -
             "subtitleslangs": subtitles,
             "outtmpl": f"{os.path.join(ROOT_DIR, 'collections', collection, 'transcripts')}/%(id)s.%(ext)s"
         }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([video_id])
-        return subtitles
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([video_id])
+            return subtitles
+        except Exception as e:
+            log_error(collection, video_id, "download_subtitles", str(e))
     return []
 
 
@@ -78,8 +81,11 @@ def __download_automatic_captions(collection: str, video_id: str, video_metadata
             "subtitleslangs": orig_lang,
             "outtmpl": f"{os.path.join(ROOT_DIR, 'collections', collection, 'transcripts')}/%(id)s.auto.%(ext)s"
         }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([video_id])
+        try:
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([video_id])
+        except Exception as e:
+            log_error(collection, video_id, "download_automatic_captions", str(e))
 
 
 def download_metadata_transcripts(collection: str, video_id: str, options: dict = None) -> None:
