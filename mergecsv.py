@@ -10,10 +10,13 @@ args = parser.parse_args()
 
 dataframes = []
 collections = args.collections
-if len(args.collections) == 1 and args.collections[0] == "all":
-    collections = [collection for collection in os.listdir("collections") if not collection.startswith(".")
-                   and os.path.isdir(os.path.join("collections", collection))]
-
+if len(args.collections) == 1:
+    if args.collections[0] == "all":
+        collections = [collection for collection in os.listdir("collections") if not collection.startswith(".")
+                       and os.path.isdir(os.path.join("collections", collection))]
+    if args.collections[0] == "recs":
+        collections = [collection for collection in os.listdir("collections") if not collection.startswith(".")
+                       and os.path.isdir(os.path.join("collections", collection)) and collection.startswith("recs_")]
 for collection in collections:
     if collection in os.listdir("collections"):
         csv_files = [file for file in os.listdir(os.path.join("collections", collection)) if file.endswith(".csv") and "metadata" in file]
