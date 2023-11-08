@@ -76,7 +76,7 @@ class RandomPrefixSampler:
         log_error(self.collection, "XXXXXXXXXX", "randomsampler_prefixsampling_size", f"size: {self.size_estimate} ids:{len(self.video_ids)} queries: {len(self.prefixes)}")  # record size
         with open(os.path.join(ROOT_DIR, "collections", self.collection, "sample_stats.json"), "w") as f:
             json.dump({
-                "collection_date": self.collection.split('_')[3],
+                "collection_date": datetime.strptime(self.collection.split('_')[3], "%Y%m%d").strftime("%b %-m %Y"),
                 "size": self.size_estimate,
                 "queries": len(self.prefixes),
                 "hits": len(self.video_ids),
