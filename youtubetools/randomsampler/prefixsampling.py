@@ -2,6 +2,7 @@
 class to generate a random prefix-sampled collection of YouTube videos
 """
 import os
+import json
 import random
 import string
 import innertube
@@ -69,9 +70,19 @@ class RandomPrefixSampler:
         for thread in threads:
             thread.join()
 
+        # size estimate includes live videos that were allocated an ID but never started
         self.size_estimate = int((2 ** 64) / (len(self.prefixes) * (2 ** self.prefix_length) *
                                               (64 ** (9 - self.prefix_length)) * 16 / len(self.video_ids)))
-        log_error(self.collection, "XXXXXXXXXX", "randomsampler_prefixsampling", self.size_estimate)  # record size
+        log_error(self.collection, "XXXXXXXXXX", "randomsampler_prefixsampling_size", f"size: {self.size_estimate} ids:{len(self.video_ids)} queries: {len(self.prefixes)}")  # record size
+        with open(os.path.join(ROOT_DIR, "collections", self.collection, "sample_stats.json"), "w") as f:
+            json.dump({
+                "collection_date": self.collection.split('_')[3],
+                "size": self.size_estimate,
+                "queries": len(self.prefixes),
+                "hits": len(self.video_ids),
+                "prefix_len": self.prefix_length,
+                "efficiency": (2 ** self.prefix_length) * (64 ** (9 - self.prefix_length)) * 16
+            }, f)
         return self.size_estimate
 
     def is_valid_video(self, video_id: str, id_seed: str) -> bool:
@@ -97,8 +108,17 @@ def get_random_prefix_sample(n: int = 1000) -> str:
     collection_init(collection)
     random_prefix_sampler = RandomPrefixSampler(n, collection)
     size_estimate = random_prefix_sampler.generate()
-    log_error(collection, f"xxxxxxxxxxx", "randomsampler_prefixsampling_sizeestimate", int(size_estimate))
     with open(os.path.join(ROOT_DIR, "collections", collection, "randomids.txt"), "w") as f:
         f.write('\n'.join(random_prefix_sampler.video_ids) + '\n')
     print(f"size estimate: {random_prefix_sampler.size_estimate}")
     return collection
+
+
+if __name__ == "__main__":
+    get_random_prefix_sample(50000)
+
+"""
+prefixes * (2 ** 5) * (64 ** 4) = (2 ** 64) / 13,430,145,708 * 20050 / 16
+
+self.size_estimate = int((2 ** 64) / (3206 * (2 ** 5) * (64 ** (9 - 5)) * 16 / 19956))
+"""
