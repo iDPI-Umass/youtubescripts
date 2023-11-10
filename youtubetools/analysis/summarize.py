@@ -3,6 +3,7 @@ functions to summarize metadata from random-sampled collections
 for use in dashboard
 """
 import os
+import sys
 import json
 import math
 import stat
@@ -325,6 +326,6 @@ if not os.path.exists(os.path.join(ROOT_DIR, "summaries")):
 """
 
 if __name__ == '__main__':
-    print(json.dumps(get_collection_stats("20230925"), indent=4))
+    print(json.dumps(get_collection_stats(sys.argv[1]), indent=4))
     # app.run()
 # get_collection_stats("20230925")
