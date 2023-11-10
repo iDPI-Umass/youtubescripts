@@ -299,12 +299,12 @@ def get_collection_names():
 
 
 @app.route('/collections/<date>')
-def get_collection_stats(date):
-    collection_names = get_collection_names()
-    if date in collection_names.keys():
-        collection_stats = CollectionSummarizer(collection_names[date])
-        collection_stats.calculate_collection_stats()
-        return collection_stats.export_collection_stats()
+def get_collection_stats(collection):
+    # collection_names = get_collection_names()
+    # if date in collection_names.keys():
+    collection_stats = CollectionSummarizer(collection)
+    collection_stats.calculate_collection_stats()
+    return collection_stats.export_collection_stats()
 
 
 
@@ -319,7 +319,7 @@ if not os.path.exists(os.path.join(ROOT_DIR, "summaries")):
 # folder name
 # enter manually
 # TODO: get value from log file
-size_estimate = 13430145708
+# size_estimate = 13430145708
 """
 
 """
