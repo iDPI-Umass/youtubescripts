@@ -347,7 +347,13 @@ if not os.path.exists(os.path.join(ROOT_DIR, "summaries")):
 """
 
 if __name__ == '__main__':
-    print(json.dumps(get_collection_stats("random_prefix_25000_20231108_152814_343113"), indent=4))
-    print(json.dumps(get_collection_stats("random_prefix_20000_20230925_145016_630931"), indent=4))
+    collections = [
+        "random_prefix_25000_20231108_152814_343113",
+        "random_prefix_20000_20230925_145016_630931",
+        "random_prefix_25000_20231204_163547_620667"
+    ]
+    for collection in collections:
+        with open(os.path.join(ROOT_DIR, "summaries", f"{collection}.json"), "w") as f:
+            json.dump(get_collection_stats(collection), f)
     # app.run()
 # get_collection_stats("20230925")
