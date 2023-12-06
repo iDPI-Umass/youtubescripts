@@ -185,7 +185,10 @@ def json_to_csv(collection: str) -> None:
                     video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
                                                                                     '%Y%m%d').strftime('%x')
                 if 'categories' in video_metadata.keys():
-                    video_metadata_dict['categories'] = video_metadata['categories'][0]
+                    if video_metadata['categories'] is not None:
+                        video_metadata_dict['categories'] = video_metadata['categories'][0]
+                    else:
+                        video_metadata_dict['categories'] = None
                 for attribute in ['tags', 'chapters', 'related_to']:
                     if attribute in video_metadata.keys():
                         video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
