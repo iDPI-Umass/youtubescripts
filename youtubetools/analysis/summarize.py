@@ -12,7 +12,7 @@ import pandas as pd
 from flask import Flask
 import matplotlib.pyplot as plt
 from datetime import datetime as dt
-from youtubetools.config import ROOT_DIR
+from youtubetools.config import ROOT_DIR, LANGUAGES
 
 
 app = Flask(__name__)
@@ -104,7 +104,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["views"] = {
                 "unit": "views",
                 "labels": self.views_labels,
-                "values": self.views.tolist()
+                "values": self.views.tolist(),
+                "median": self.__metadata["view_count"].median(),
+                "mean": self.__metadata["view_count"].mean()
             }
             collection_stats["stats"]["quantiles"]["views"] = self.__calculate_quantiles("view_count")
         if not self.likes.empty:
@@ -112,7 +114,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["likes"] = {
                 "unit": "likes",
                 "labels": self.likes_labels,
-                "values": self.likes.tolist()
+                "values": self.likes.tolist(),
+                "median": self.__metadata["like_count"].median(),
+                "mean": self.__metadata["like_count"].mean()
             }
             collection_stats["stats"]["quantiles"]["likes"] = self.__calculate_quantiles("like_count")
         if not self.duration.empty:
@@ -120,7 +124,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["duration"] = {
                 "unit": "seconds",
                 "labels": self.duration_labels,
-                "values": self.duration.tolist()
+                "values": self.duration.tolist(),
+                "median": self.__metadata["duration"].median(),
+                "mean": self.__metadata["duration"].mean()
             }
             collection_stats["stats"]["quantiles"]["duration"] = self.__calculate_quantiles("duration")
         if not self.comments.empty:
@@ -128,7 +134,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["comments"] = {
                 "unit": "comments",
                 "labels": self.comments_labels,
-                "values": self.comments.tolist()
+                "values": self.comments.tolist(),
+                "median": self.__metadata["comment_count"].median(),
+                "mean": self.__metadata["comment_count"].mean()
             }
             collection_stats["stats"]["quantiles"]["comments"] = self.__calculate_quantiles("comment_count")
         if not self.subscribers.empty:
@@ -136,7 +144,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["subscribers"] = {
                 "unit": "subscribers",
                 "labels": self.subscribers_labels,
-                "values": self.subscribers.tolist()
+                "values": self.subscribers.tolist(),
+                "median": self.__metadata["channel_follower_count"].median(),
+                "mean": self.__metadata["channel_follower_count"].mean()
             }
             collection_stats["stats"]["quantiles"]["subscribers"] = self.__calculate_quantiles("channel_follower_count")
         if not self.whisper_lang.empty:
@@ -151,7 +161,9 @@ class CollectionSummarizer:
             collection_stats["stats"]["data"]["upload_year"] = {
                 "unit": "year",
                 "labels": self.year_labels,
-                "values": self.upload_date.tolist()
+                "values": self.upload_date.tolist(),
+                "median": self.__metadata["upload_year"].median(),
+                "mean": self.__metadata["upload_year"].mean()
             }
             collection_stats["stats"]["fields"].append("annual_uploads")
             collection_stats["stats"]["data"]["annual_uploads"] = {
@@ -247,13 +259,20 @@ class CollectionSummarizer:
                 labels.append(f'{(bins[i - 1] + 1):,}-{(bins[i]):,}')
         return distribution, labels
 
-    def __whisperlang_stats(self, confidence=0.6):
+    def __whisperlang_stats(self, confidence=0.6, minimum_frequency=0.005):
         languages = self.__metadata[self.__metadata['whisper_probability'] >= confidence].groupby(
             'whisper_lang', as_index=False)['whisper_lang'].agg({'count': 'count'}).sort_values(
-            ['count'], ascending=False)
-        languages.loc[-1] = ["unknown", len(self.__metadata[self.__metadata['whisper_probability'] < confidence])]
-        languages['proportion'] = languages['count'] / languages['count'].sum()
-        return languages['proportion'], languages['whisper_lang'].tolist()
+            ['count'], ascending=False, ignore_index=True)
+        languages['proportion'] = languages['count'] / len(self.__metadata[self.__metadata['whisper_probability'] >= confidence])
+        languages['language_label'] = [LANGUAGES[lang] for lang in languages['whisper_lang'].tolist()]
+
+        low_freq_lang_proportion = languages[languages['proportion'] < minimum_frequency]['proportion'].sum()
+        languages = languages.drop(languages[languages['proportion'] < minimum_frequency].index)
+        languages = languages.drop("count", axis=1)
+        languages.loc[len(languages)] = ["other", low_freq_lang_proportion, "other"]
+        # languages.loc[len(languages)] = ["xx", len(self.__metadata[self.__metadata['whisper_probability'] < confidence]) / len(self.__metadata), "no language"]
+
+        return languages['proportion'], languages['language_label'].tolist()
 
     def __uploaddate_stats(self):
         years = self.__metadata.groupby('upload_year', as_index=False)['upload_year'].agg({'count': 'count'})
@@ -270,8 +289,10 @@ class CollectionSummarizer:
         binned['proportion'] = binned['count'] / binned['count'].sum()
         return binned['proportion'], binned[field].tolist()
 
-    def __calculate_quantiles(self, field, intervals=100):
-        return [self.__metadata[field].quantile(i/intervals) for i in range(1, intervals+1)]
+    def __calculate_quantiles(self, field):
+        q = [i/100 for i in range(1,100)]
+        return self.__metadata[field].quantile(q=q, interpolation='higher').tolist()
+
 
 
 @app.route('/collections')
@@ -326,6 +347,7 @@ if not os.path.exists(os.path.join(ROOT_DIR, "summaries")):
 """
 
 if __name__ == '__main__':
-    print(json.dumps(get_collection_stats(sys.argv[1]), indent=4))
+    print(json.dumps(get_collection_stats("random_prefix_25000_20231108_152814_343113"), indent=4))
+    print(json.dumps(get_collection_stats("random_prefix_20000_20230925_145016_630931"), indent=4))
     # app.run()
 # get_collection_stats("20230925")

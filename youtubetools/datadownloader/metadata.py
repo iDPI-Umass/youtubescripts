@@ -167,33 +167,37 @@ def json_to_csv(collection: str) -> None:
         if os.stat(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file)).st_size == 0:
             video_metadata_dict['id'] = json_file.split('.')[0]
         else:
-            with (open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r", encoding='utf8')
-                  as metadata_file):
-                video_metadata = json.load(metadata_file)
-            video_metadata_dict['id'] = json_file.split('.')[0]
-            for attribute in simple_attributes:
-                if attribute in video_metadata.keys():
-                    video_metadata_dict[attribute] = video_metadata[attribute]
-                else:
-                    video_metadata_dict[attribute] = 0
-            for attribute in ytmusic_attributes:
-                if attribute in video_metadata.keys():
-                    video_metadata_dict[attribute] = video_metadata[attribute]
+            try:
+                with (open(os.path.join(ROOT_DIR, "collections", collection, "metadata", json_file), "r", encoding='utf8')
+                      as metadata_file):
+                    video_metadata = json.load(metadata_file)
+                video_metadata_dict['id'] = json_file.split('.')[0]
+                for attribute in simple_attributes:
+                    if attribute in video_metadata.keys():
+                        video_metadata_dict[attribute] = video_metadata[attribute]
+                    else:
+                        video_metadata_dict[attribute] = 0
+                for attribute in ytmusic_attributes:
+                    if attribute in video_metadata.keys():
+                        video_metadata_dict[attribute] = video_metadata[attribute]
 
-            if 'upload_date' in video_metadata.keys():
-                video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
-                                                                                '%Y%m%d').strftime('%x')
-            if 'categories' in video_metadata.keys():
-                video_metadata_dict['categories'] = video_metadata['categories'][0]
-            for attribute in ['tags', 'chapters', 'related_to']:
-                if attribute in video_metadata.keys():
-                    video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
-            if 'automatic_captions' in video_metadata.keys():
-                video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
-                                                                        video_metadata['automatic_captions'].keys()
-                                                                        if auto_caption.endswith("-orig")])
-            if "subtitles" in video_metadata.keys():
-                video_metadata_dict["subtitles"] = json.dumps(list(video_metadata["subtitles"].keys()))
+                if 'upload_date' in video_metadata.keys():
+                    video_metadata_dict['upload_date'] = datetime.datetime.strptime(video_metadata['upload_date'],
+                                                                                    '%Y%m%d').strftime('%x')
+                if 'categories' in video_metadata.keys():
+                    video_metadata_dict['categories'] = video_metadata['categories'][0]
+                for attribute in ['tags', 'chapters', 'related_to']:
+                    if attribute in video_metadata.keys():
+                        video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
+                if 'automatic_captions' in video_metadata.keys():
+                    video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
+                                                                            video_metadata['automatic_captions'].keys()
+                                                                            if auto_caption.endswith("-orig")])
+                if "subtitles" in video_metadata.keys():
+                    video_metadata_dict["subtitles"] = json.dumps(list(video_metadata["subtitles"].keys()))
+            except Exception as e:
+                print(json_file.split('.')[0])
+                log_error(collection, json_file.split('.')[0], "datadownloader_metadata_jsontocsv", e)
         collection_metadata.append(video_metadata_dict)
     df = pd.DataFrame.from_dict(collection_metadata)
     df.to_csv(os.path.join(ROOT_DIR, "collections", collection, 'collection_metadata.csv'), index=False, header=True)
