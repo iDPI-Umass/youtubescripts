@@ -65,14 +65,14 @@ class CollectionSummarizer:
         self.category = pd.DataFrame()
         self.category_labels = []
 
-    def calculate_collection_stats(self):
+    def calculate_collection_stats(self, lang_confidence=0.75):
         self.views, self.views_labels = self.__numerical_stats('view_count', 2, [-.01, 0])
         self.likes, self.likes_labels = self.__numerical_stats('like_count', 2, [-.01, 0])
         self.duration, self.duration_labels = self.__numerical_stats('duration', 2)
         self.comments, self.comments_labels = self.__numerical_stats('comment_count', 2, [-.01, 0])
         self.subscribers, self.subscribers_labels = self.__numerical_stats('channel_follower_count', 2, [-.01, 0])
 
-        self.whisper_lang, self.whisper_lang_labels = self.__whisperlang_stats(confidence=0.75)
+        self.whisper_lang, self.whisper_lang_labels = self.__whisperlang_stats(confidence=lang_confidence)
 
         self.upload_date, self.annual_uploads, self.annual_size, self.year_labels = self.__uploaddate_stats()
 
@@ -234,7 +234,7 @@ class CollectionSummarizer:
             self.__live_videos_count = len(df_live)
             self.__update_size_estimate()
             df = df[df["channel_id"] != "0"]
-            df["upload_date"] = pd.to_datetime(df["upload_date"], format="%m/%d/%y")
+            df["upload_date"] = pd.to_datetime(df["upload_date"])  # , format="%m/%d/%y")
             df["upload_year"] = df["upload_date"].dt.year
             df = df.replace('',np.nan).fillna(0)
             return df
@@ -347,11 +347,12 @@ if not os.path.exists(os.path.join(ROOT_DIR, "summaries")):
 """
 
 if __name__ == '__main__':
-    collections = [
-        "random_prefix_25000_20231108_152814_343113",
-        "random_prefix_20000_20230925_145016_630931",
-        "random_prefix_25000_20231204_163547_620667"
-    ]
+    # collections = [
+    #     "random_prefix_25000_20231108_152814_343113",
+    #     "random_prefix_20000_20230925_145016_630931",
+    #     "random_prefix_25000_20231204_163547_620667"
+    # ]
+    collections = ["random_prefix_25000_20231212_101404_111559"]
     for collection in collections:
         with open(os.path.join(ROOT_DIR, "summaries", f"{collection}.json"), "w") as f:
             json.dump(get_collection_stats(collection), f)
