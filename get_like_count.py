@@ -16,11 +16,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument("collection", type=str)
 args = parser.parse_args()
 
-download_options = ((not args.skiplanguage or args.saveaudio), True)  # download audio, download metadata
 
 
 max_threads = 10
-json_files = os.listdir(os.path.join(ROOT_DIR, "collections", args.collection))
+json_files = [json_file for json_file in os.listdir(os.path.join(ROOT_DIR, "collections", args.collection, "metadata")) if json_file.endswith(".json")]
 total_videos = len(json_files)
 pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
 
@@ -30,11 +29,13 @@ def worker(q):
         json_file = q.get()
         video_id = json_file.split(".")[0]
         try:
-            with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "w") as f:
+            with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "r") as f:
                 downloaded_metadata = json.load(f)
-                new_metadata = download_metadata(video_id)
-                downloaded_metadata["like_count"] = new_metadata["like_count"]
-                json.dump(downloaded_metadata, f)
+            new_metadata = download_metadata(video_id)
+            downloaded_metadata["like_count"] = new_metadata["like_count"]
+            print(f'{video_id} {downloaded_metadata["like_count"]}')
+            # with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "w") as f:
+            #     json.dump(downloaded_metadata, f)
         except Exception as e:
             print(f'{video_id} {e}')
         pbar.update((total_videos - q.qsize()) / total_videos * 100)
