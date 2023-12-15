@@ -28,16 +28,21 @@ def worker(q):
     while not q.empty():
         json_file = q.get()
         video_id = json_file.split(".")[0]
+        downloaded_metadata = {}
         try:
             with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "r") as f:
                 downloaded_metadata = json.load(f)
             new_metadata = download_metadata(video_id)
-            downloaded_metadata["like_count"] = new_metadata["like_count"]
-            print(f'{video_id} {downloaded_metadata["like_count"]}')
-            # with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "w") as f:
-            #     json.dump(downloaded_metadata, f)
+            like_count = new_metadata["like_count"]
+            if like_count is None:
+                like_count = 0
+            downloaded_metadata["like_count"] = like_count
+            # print(f'{video_id} {downloaded_metadata["like_count"]}')
         except Exception as e:
             print(f'{video_id} {e}')
+            downloaded_metadata["like_count"] = 0
+        with open(os.path.join(ROOT_DIR, "collections", args.collection, "metadata", json_file), "w") as f:
+            json.dump(downloaded_metadata, f)
         pbar.update((total_videos - q.qsize()) / total_videos * 100)
         q.task_done()
 
