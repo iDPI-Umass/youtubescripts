@@ -30,20 +30,25 @@ download_options = ((not args.skiplanguage or args.saveaudio), True)  # download
 df = pd.read_csv(os.path.join(os.path.expanduser('~'), args.file), header=None)
 collections = df[0].tolist()
 
+flattened = dict()
+total_videos = 1
+current_collection = ""
+
+def worker(q):
+    video_id = q.get()
+    youtube_tools(current_collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage,
+                  related_to=flattened[video_id])
+    pbar.update((total_videos - q.qsize()) / total_videos * 100)
+    q.task_done()
+
+
 for collection in collections:
+    current_collection = collection
     print(f"{collection} start")
     pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
     max_threads = 10
     flattened = flatten_dict(collection)
     total_videos = len(list(flattened.keys()))
-
-    def worker(q):
-        video_id = q.get()
-        youtube_tools(collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage,
-                      related_to=flattened[video_id])
-        pbar.update((total_videos - q.qsize()) / total_videos * 100)
-        q.task_done()
-
     q = Queue(maxsize=0)
     for video_id in flattened.keys():
         q.put(video_id)
