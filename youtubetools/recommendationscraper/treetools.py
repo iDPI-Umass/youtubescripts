@@ -8,7 +8,8 @@ class TreeUniqueValues:
     def __init__(self, collection):
         self.flattened_dict = {}
         self.collection = collection
-        with open(os.path.join(ROOT_DIR, "collections", self.collection, "tree.json"), "r") as tree_file:
+        tree_filename = [filename for filename in os.listdir(os.path.join(ROOT_DIR, "collections", self.collection)) if "tree.json" in filename][0]
+        with open(os.path.join(ROOT_DIR, "collections", self.collection, tree_filename), "r") as tree_file:
             self.tree = json.load(tree_file)
         # self.__flatten_dict_recursive(self.tree)
         self.__flatten_dict_recursive_related(self.tree)

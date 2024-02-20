@@ -15,6 +15,8 @@ parser.add_argument("--skipmusicsearch", action="store_true")
 parser.add_argument("--skipsubtitles", action="store_true")
 parser.add_argument("--skipautocaptions", action="store_true")
 parser.add_argument("--saveaudio", action="store_true")
+parser.add_argument("--onlytree", action="store_true")
+
 
 args = parser.parse_args()
 
@@ -39,6 +41,8 @@ while not q.empty():
             query.append('--skipautocaptions')
         if args.saveaudio:
             query.append('--saveaudio')
+        if args.onlytree:
+            query.append('--onlytree')
         subprocess.run(query)
     except Exception as e:
         print(e)

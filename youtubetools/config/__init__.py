@@ -121,7 +121,8 @@ LANGUAGES = {
     "ba": "bashkir",
     "jw": "javanese",
     "su": "sundanese",
-    "xx": "no language"
+    "xx": "no language",
+    "0": "no language"
 }
 # language code lookup by name, with a few language aliases
 TO_LANGUAGE_CODE = {

@@ -110,13 +110,15 @@ class RecommendationScraper:
         return self.rec_dict
 
 
-def get_recommendation_tree(video_id, layers=2):
+def get_recommendation_tree(video_id, layers=2, tree_name="tree"):
     collection = f"recs_{video_id}_{layers}_{datetime.now().strftime('%Y%m%d_%H%M%S_%f')}"
     collection_init(collection)
 
     scraper = RecommendationScraper(collection, video_id, layers)
     tree = scraper.bfs()
-    with open(os.path.join(ROOT_DIR, "collections", collection, "tree.json"), "w", encoding='utf8') as file:
+    if tree_name != "tree":
+        tree_name += "_tree"
+    with open(os.path.join(ROOT_DIR, "collections", collection, f"{tree_name}.json"), "w", encoding='utf8') as file:
         json.dump(tree, file, indent=4, ensure_ascii=False)
 
     return collection

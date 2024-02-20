@@ -19,10 +19,14 @@ app = Flask(__name__)
 
 
 class CollectionSummarizer:
-    def __init__(self, collection):
+    def __init__(self, collection, rec_tree=False):
 
         self.__collection = collection
-        self.__collection_date, self.__estimated_size, self.__queries, self.__hits, self.__prefix_len, self.__efficiency = self.__load_sample_stats()
+        self.rec_tree = rec_tree
+        if not self.rec_tree:
+            self.__collection_date, self.__estimated_size, self.__queries, self.__hits, self.__prefix_len, self.__efficiency = self.__load_sample_stats()
+        else:
+            self.__collection_date, self.__estimated_size, self.__queries, self.__hits, self.__prefix_len, self.__efficiency = collection, 0, 0, 0, 0, 0
         self.__live_videos_count = 0
 
         self.__metadata = self.__load_metadata()
@@ -232,7 +236,8 @@ class CollectionSummarizer:
             df = pd.read_csv(os.path.join(ROOT_DIR, "collections", self.__collection, metadata_csv[0]))
             df_live = df[df["channel_id"] == "0"]
             self.__live_videos_count = len(df_live)
-            self.__update_size_estimate()
+            if not self.rec_tree:
+                self.__update_size_estimate()
             df = df[df["channel_id"] != "0"]
             df["upload_date"] = pd.to_datetime(df["upload_date"])  # , format="%m/%d/%y")
             df["upload_year"] = df["upload_date"].dt.year
@@ -352,7 +357,11 @@ if __name__ == '__main__':
     #     "random_prefix_20000_20230925_145016_630931",
     #     "random_prefix_25000_20231204_163547_620667"
     # ]
-    collections = ["random_prefix_25000_20231212_101404_111559"]
+
+    # collections = ["random_prefix_25000_20231221_005140_165302", "random_prefix_25000_20231220_051525_283405",
+    #                "random_prefix_25000_20231220_150455_192679", "random_prefix_25000_20231219_191558_022207"]
+    # collections = ["combined"]
+    collections = ["random_prefix_26000_20240126_162404_167661"]
     for collection in collections:
         with open(os.path.join(ROOT_DIR, "summaries", f"{collection}.json"), "w") as f:
             json.dump(get_collection_stats(collection), f)

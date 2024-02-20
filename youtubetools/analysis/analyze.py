@@ -6,6 +6,7 @@ import os
 import pandas as pd
 from scipy.spatial import distance
 from youtubetools.logger import log_error
+from youtubetools.analysis.langanalysis import load_metadata
 from youtubetools.config import BINS, ROOT_DIR, PROBABILITY_THRESHOLD
 
 """
@@ -29,14 +30,15 @@ def calculate_vectors(metadata: pd.DataFrame, attribute: str) -> dict:
     # initialize dict with bin labels
     ordered_binned_vectors = dict.fromkeys(BINS[attribute], 0)
 
-    # calculate vectors for non-numerical bins
-    if attribute in ["accessible_in_youtube_music", "whisper_lang"]:
+    # calculate vectors for non-numerical, non-interval bins
+    if attribute in ["accessible_in_youtube_music", "whisper_lang", "upload_year"]:
         binned_vectors = metadata[attribute].value_counts(normalize=True).to_dict()
         for bin_label in binned_vectors:
             ordered_binned_vectors[bin_label] = binned_vectors[bin_label]
     # calculate vectors for numerical bins
     else:
         binned_vectors = metadata[attribute].value_counts(bins=BINS[attribute], normalize=True).to_dict()
+
         for bin_label in binned_vectors:
             # if isinstance(bin_label, pd._libs.interval.Interval):
             # use left side of interval as bin label
@@ -51,12 +53,16 @@ def import_collection_metadata(collection: str) -> pd.DataFrame:
     :return: data from collection_metadata.csv in a dataframe
     """
     try:
-        metadata_filename = [f for f in os.listdir(os.path.join(ROOT_DIR, "collections", collection))
-                             if f.endswith(".csv")][0]
-        df = pd.read_csv(os.path.join(ROOT_DIR, "collections", collection, metadata_filename))
-        df = df.drop(df[df['upload_date'] != df['upload_date']].index)
-        df['upload_year'] = df['upload_date'].apply(lambda x: int("20"+x[-2:]))
-        df.loc[df['whisper_probability'] < PROBABILITY_THRESHOLD, 'whisper_lang'] = 'xx'
+        df = load_metadata(collection)
+        print(df)
+        # metadata_filename = [f for f in os.listdir(os.path.join(ROOT_DIR, "collections", collection))
+        #                      if f.endswith(".csv")][0]
+        # df = pd.read_csv(os.path.join(ROOT_DIR, "collections", collection, metadata_filename))
+        # df["upload_date"] = pd.to_datetime(df["upload_date"])  # , format="%m/%d/%y")
+        # df["upload_year"] = df["upload_date"].dt.year
+        # df = df.drop(df[df['upload_date'] != df['upload_date']].index)
+        # df['upload_year'] = df['upload_date'].apply(lambda x: int("20"+x[-2:]))
+        # df.loc[df['whisper_probability'] < PROBABILITY_THRESHOLD, 'whisper_lang'] = 'xx'
         return df
     except Exception as e:
         log_error(collection, "xxxxxxxxxxx", "analysis.import_collection_metadata", str(e))
@@ -94,6 +100,8 @@ def collection_comparison(c1: str, c2: str, attributes=None):
 
     # import metadata and initialize headers/vectors
     c1_metadata, c2_metadata = import_collection_metadata(c1), import_collection_metadata(c2)
+    print(len(c1_metadata))
+    print(len(c2_metadata))
     c1_headers, c2_headers = c1_metadata.columns.values.tolist(), c2_metadata.columns.values.tolist()
     c1_vectors, c2_vectors, used_attributes = [], [], []
 
