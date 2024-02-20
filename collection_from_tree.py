@@ -33,19 +33,21 @@ collections = df[0].tolist()
 flattened = dict()
 total_videos = 1
 current_collection = ""
+pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
 
 def worker(q):
-    video_id = q.get()
-    youtube_tools(current_collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage,
-                  related_to=flattened[video_id])
-    pbar.update((total_videos - q.qsize()) / total_videos * 100)
-    q.task_done()
+    while not q.empty():
+        video_id = q.get()
+        youtube_tools(current_collection, video_id, download_options, metadata_options, args.saveaudio, args.skiplanguage,
+                      related_to=flattened[video_id])
+        pbar.update((total_videos - q.qsize()) / total_videos * 100)
+        q.task_done()
 
 
 for collection in collections:
     current_collection = collection
     print(f"{collection} start")
-    pbar = progressbar.ProgressBar(maxval=100, widgets=[progressbar.PercentageLabelBar()]).start()
+
     max_threads = 10
     flattened = flatten_dict(collection)
     total_videos = len(list(flattened.keys()))
