@@ -39,5 +39,12 @@ def youtube_tools(
                 json.dump(metadata, md_file, indent=4, ensure_ascii=False)
             if not save_audio:
                 os.remove(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"))
+        elif os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json")):
+            with (open(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json"), "r",
+                       encoding='utf8') as md_file):
+                metadata = json.load(md_file)
+                if "whisper_lang" not in metadata.keys():
+                    log_error(collection, video_id, "get_metadata",
+                              f"audio for {video_id} not downloaded")
         else:
             log_error(collection, video_id, "get_metadata", f"audio and/or metadata for {video_id} not downloaded")

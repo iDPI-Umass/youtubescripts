@@ -45,6 +45,8 @@ def download_data(collection: str, video_id: str, download_options=(True, True),
                 # downloading audio from actively live video results in potentially infinite download
                 if "is_live" in metadata.keys() and metadata["is_live"]:
                     return
+                if "whisper_lang" in metadata.keys():
+                    return
             download_audio_track(collection, video_id, audio_options)
         except Exception as e:
             log_error(collection, video_id, 'datadownloader.download', str(e))
