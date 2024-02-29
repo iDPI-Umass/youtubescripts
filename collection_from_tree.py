@@ -7,6 +7,7 @@ import progressbar
 import pandas as pd
 from queue import Queue
 from threading import Thread
+from youtubetools.config import ROOT_DIR
 from youtubetools.datadownloader import json_to_csv
 from youtubetools.youtubescripts import youtube_tools
 from youtubetools.recommendationscraper import flatten_dict
@@ -53,7 +54,8 @@ for collection in collections:
     total_videos = len(list(flattened.keys()))
     q = Queue(maxsize=0)
     for video_id in flattened.keys():
-        q.put(video_id)
+        if not os.path.isfile(os.path.join(ROOT_DIR, "collections", collection, "metadata", f"{video_id}.json")):
+            q.put(video_id)
     threads = []
     for i in range(max_threads):
         work_thread = Thread(target=worker, args=(q,))
