@@ -9,13 +9,13 @@ import math
 import stat
 import numpy as np
 import pandas as pd
-from flask import Flask
+#from flask import Flask
 import matplotlib.pyplot as plt
 from datetime import datetime as dt
 from youtubetools.config import ROOT_DIR, LANGUAGES
 
 
-app = Flask(__name__)
+#app = Flask(__name__)
 
 
 class CollectionSummarizer:
@@ -239,7 +239,7 @@ class CollectionSummarizer:
             if not self.rec_tree:
                 self.__update_size_estimate()
             df = df[df["channel_id"] != "0"]
-            df["upload_date"] = pd.to_datetime(df["upload_date"])  # , format="%m/%d/%y")
+            df["upload_date"] = pd.to_datetime(df["upload_date"])  # , format='ISO8601')  # , format="%m/%d/%y")
             df["upload_year"] = df["upload_date"].dt.year
             df = df.replace('',np.nan).fillna(0)
             return df
@@ -298,9 +298,37 @@ class CollectionSummarizer:
         q = [i/100 for i in range(1,100)]
         return self.__metadata[field].quantile(q=q, interpolation='higher').tolist()
 
+    def languages_by_year(self, confidence = 0.75):
+        years = []
+        languages_by_year = {}
+        for year in range(2005, max(self.__metadata.upload_year)+1):
+            years.append(year)
+            year_subset = self.__metadata[self.__metadata["upload_year"] == year]
+            print(len(year_subset))
+            year_subset = year_subset[year_subset['whisper_probability'] >= confidence]
+            if not year_subset.empty:
+                languages = year_subset.groupby('whisper_lang', as_index=False)['whisper_lang'].agg(
+                    {'count': 'count'}).sort_values(['count'], ascending=False, ignore_index=True)
+                languages['proportion'] = languages['count'] / len(year_subset)
+                languages['language_label'] = [LANGUAGES[lang] for lang in languages['whisper_lang'].tolist()]
+                language_labels, proportions = languages['language_label'].to_list(), languages['proportion'].to_list()
+                for i in range(len(language_labels)):
+                    if language_labels[i] not in languages_by_year.keys():
+                        languages_by_year[language_labels[i]] = [0] * (len(years) - 1)
+                    languages_by_year[language_labels[i]].append(proportions[i])
+                for lang in languages_by_year:
+                    if len(languages_by_year[lang]) < len(years):
+                        languages_by_year[lang].append(0)
+            else:
+                for lang in languages_by_year:
+                    languages_by_year[lang].append(0)
+        df = pd.DataFrame.from_dict(languages_by_year, orient='index')
+        df.columns = years
+        df.to_csv(os.path.join(ROOT_DIR, "summaries", f'{self.__collection}_lang.csv'), index=True, header=True)
 
 
-@app.route('/collections')
+
+# @app.route('/collections')
 def get_collection_dates():
     collections = get_collection_names()
     dates = []
@@ -325,12 +353,13 @@ def get_collection_names():
     return collections
 
 
-@app.route('/collections/<date>')
+# @app.route('/collections/<date>')
 def get_collection_stats(collection):
     # collection_names = get_collection_names()
     # if date in collection_names.keys():
-    collection_stats = CollectionSummarizer(collection)
-    collection_stats.calculate_collection_stats()
+    collection_stats = CollectionSummarizer(collection, False)
+    collection_stats.calculate_collection_stats(0.75)
+    collection_stats.languages_by_year(0.75)
     return collection_stats.export_collection_stats()
 
 
@@ -361,7 +390,8 @@ if __name__ == '__main__':
     # collections = ["random_prefix_25000_20231221_005140_165302", "random_prefix_25000_20231220_051525_283405",
     #                "random_prefix_25000_20231220_150455_192679", "random_prefix_25000_20231219_191558_022207"]
     # collections = ["combined"]
-    collections = ["random_prefix_26000_20240126_162404_167661"]
+    #collections = ["combined_recs_es_root", "combined_recs_es_1", "combined_recs_es_2"]
+    collections = ["metadata_26000_20240315_fixed"]
     for collection in collections:
         with open(os.path.join(ROOT_DIR, "summaries", f"{collection}.json"), "w") as f:
             json.dump(get_collection_stats(collection), f)
