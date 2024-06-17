@@ -12,7 +12,7 @@ import datetime
 ROOT_DIR = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
 
 # sets whisper model size
-DEFAULT_WHISPER_MODEL = "small"
+DEFAULT_WHISPER_MODEL = "large-v3"  # "small"
 
 # limits how many recommendation scraping threads can run at one time
 MAX_SPIDERING_THREADS = 10

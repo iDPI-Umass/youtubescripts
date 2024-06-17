@@ -44,7 +44,7 @@ def classify_language_whisper(wav_filepath: str, model: str = DEFAULT_WHISPER_MO
     :param model: whisper model name (tiny base small medium large-v2)
     :return: language, probability
     """
-    assert model in ["tiny", "base", "small", "medium", "large-v2"], \
+    assert model in ["tiny", "base", "small", "medium", "large-v2", "large-v3"], \
         "invalid model name (tiny base small medium large-v2)"
     model_name = f'openai/whisper-{model}'
     try:
