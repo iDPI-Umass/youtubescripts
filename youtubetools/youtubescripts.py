@@ -13,7 +13,8 @@ def youtube_tools(
         save_audio: bool,
         skip_language: bool,
         related_to: list[str] = None,
-        audio_options: dict = None):
+        audio_options: dict = {}):
+    audio_options["twominutes"] = not skip_language and not save_audio
     download_data(collection, video_id, download_options, metadata_options, audio_options)
 
     if related_to is not None:
