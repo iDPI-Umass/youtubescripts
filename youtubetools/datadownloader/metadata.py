@@ -145,12 +145,15 @@ def download_metadata_transcripts(collection: str, video_id: str, options: dict 
                     json.dump(video_metadata, f, indent=4, ensure_ascii=False)
 
 
-def json_to_csv(collection: str) -> None:
+def json_to_csv(collection: str, skip_attributes: list[str] = None) -> None:
     """
     consolidates metadata JSON files into a single CSV file for a collection
     :param collection: name of collection folder
     :return: None
     """
+    if skip_attributes is None:
+        skip_attributes = []
+
     collection_metadata = []
     simple_attributes = ['title', 'fulltitle', 'thumbnail', 'description', 'duration', 'view_count',
                          'like_count', 'average_rating', 'comment_count', 'channel_id', 'channel',
@@ -173,12 +176,12 @@ def json_to_csv(collection: str) -> None:
                     video_metadata = json.load(metadata_file)
                 video_metadata_dict['id'] = json_file.split('.')[0]
                 for attribute in simple_attributes:
-                    if attribute in video_metadata.keys():
+                    if attribute in video_metadata.keys() and attribute not in skip_attributes:
                         video_metadata_dict[attribute] = video_metadata[attribute]
                     else:
                         video_metadata_dict[attribute] = 0
                 for attribute in ytmusic_attributes:
-                    if attribute in video_metadata.keys():
+                    if attribute in video_metadata.keys() and attribute not in skip_attributes:
                         video_metadata_dict[attribute] = video_metadata[attribute]
 
                 if 'upload_date' in video_metadata.keys():
@@ -190,7 +193,7 @@ def json_to_csv(collection: str) -> None:
                     else:
                         video_metadata_dict['categories'] = None
                 for attribute in ['tags', 'chapters', 'related_to']:
-                    if attribute in video_metadata.keys():
+                    if attribute in video_metadata.keys() and attribute not in skip_attributes:
                         video_metadata_dict[attribute] = json.dumps(video_metadata[attribute])
                 if 'automatic_captions' in video_metadata.keys():
                     video_metadata_dict['automatic_captions'] = json.dumps([auto_caption for auto_caption in
