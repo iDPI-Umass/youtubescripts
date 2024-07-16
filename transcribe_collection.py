@@ -32,11 +32,6 @@ def transcribe(collection, video_id):
         torch_dtype=torch_dtype,
         device=device,
     )
-    """
-    chunk_length_s=30,
-        batch_size=16,
-        return_timestamps=True,
-    """
     result = pipe(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"),
                   generate_kwargs={"language": "korean"})
     with open(os.path.join(ROOT_DIR, "collections", collection, "transcripts", f"{video_id}_whisper3.txt"), "w") as f:
