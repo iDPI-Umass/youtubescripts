@@ -13,13 +13,13 @@ from threading import Thread
 from youtubetools.config import ROOT_DIR
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
 
-max_threads = 10
-
+# max_threads = 10
+#
 # device = "cuda:0" if torch.cuda.is_available() else "cpu"
 # torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 # model_id = "openai/whisper-large-v3"
-
-
+#
+#
 # def transcribe(collection, video_id):
 #     model = AutoModelForSpeechSeq2Seq.from_pretrained(
 #         model_id, torch_dtype=torch_dtype, use_safetensors=True
@@ -35,11 +35,6 @@ max_threads = 10
 #         torch_dtype=torch_dtype,
 #         device=device,
 #     )
-#     """
-#     chunk_length_s=30,
-#         batch_size=16,
-#         return_timestamps=True,
-#     """
 #     result = pipe(os.path.join(ROOT_DIR, "collections", collection, "wavs", f"{video_id}.wav"),
 #                   generate_kwargs={"language": "korean"})
 #     with open(os.path.join(ROOT_DIR, "collections", collection, "transcripts", f"{video_id}_whisper3.txt"), "w") as f:
